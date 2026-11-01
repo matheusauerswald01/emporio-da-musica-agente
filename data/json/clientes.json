@@ -1,0 +1,302 @@
+[
+  {
+    "id_cliente": 1,
+    "primeiro_nome": "Lucas",
+    "email": "lucas.mendes@jmail.com",
+    "telefone": "(67) 99812-3456"
+  },
+  {
+    "id_cliente": 2,
+    "primeiro_nome": "Ana",
+    "email": "anacarol.ferreira@coldmail.com",
+    "telefone": "(67) 99654-7821"
+  },
+  {
+    "id_cliente": 3,
+    "primeiro_nome": "Pedro",
+    "email": "pedro.oliveira@jmail.com",
+    "telefone": "(67) 98432-1098"
+  },
+  {
+    "id_cliente": 4,
+    "primeiro_nome": "Mariana",
+    "email": "mariana.costa@inlook.com",
+    "telefone": "(67) 99123-4567"
+  },
+  {
+    "id_cliente": 5,
+    "primeiro_nome": "Rafael",
+    "email": "rafael.pereira@jmail.com",
+    "telefone": "(67) 98765-4321"
+  },
+  {
+    "id_cliente": 6,
+    "primeiro_nome": "Juliana",
+    "email": "juliana.almeida@hayoo.com.br",
+    "telefone": "(67) 99234-5678"
+  },
+  {
+    "id_cliente": 7,
+    "primeiro_nome": "Thiago",
+    "email": "thiago.barbosa@jmail.com",
+    "telefone": "(67) 98321-6543"
+  },
+  {
+    "id_cliente": 8,
+    "primeiro_nome": "Fernanda",
+    "email": "fernanda.ribeiro@coldmail.com",
+    "telefone": "(67) 99456-7890"
+  },
+  {
+    "id_cliente": 9,
+    "primeiro_nome": "Gabriel",
+    "email": "gabriel.araujo@jmail.com",
+    "telefone": "(67) 98654-3210"
+  },
+  {
+    "id_cliente": 10,
+    "primeiro_nome": "Camila",
+    "email": "camila.duarte@inlook.com",
+    "telefone": "(67) 99567-8901"
+  },
+  {
+    "id_cliente": 11,
+    "primeiro_nome": "Bruno",
+    "email": "bruno.martins@jmail.com",
+    "telefone": "(67) 98543-2109"
+  },
+  {
+    "id_cliente": 12,
+    "primeiro_nome": "Isabela",
+    "email": "isabela.moreira@jmail.com",
+    "telefone": "(67) 99678-9012"
+  },
+  {
+    "id_cliente": 13,
+    "primeiro_nome": "Diego",
+    "email": "diego.castro@coldmail.com",
+    "telefone": "(67) 98210-9876"
+  },
+  {
+    "id_cliente": 14,
+    "primeiro_nome": "Letícia",
+    "email": "leticia.rocha@jmail.com",
+    "telefone": "(67) 99789-0123"
+  },
+  {
+    "id_cliente": 15,
+    "primeiro_nome": "Matheus",
+    "email": "matheus.correia@hayoo.com.br",
+    "telefone": "(67) 98109-8765"
+  },
+  {
+    "id_cliente": 16,
+    "primeiro_nome": "Patrícia",
+    "email": "patricia.cardoso@jmail.com",
+    "telefone": "(67) 99890-1234"
+  },
+  {
+    "id_cliente": 17,
+    "primeiro_nome": "Gustavo",
+    "email": "gustavo.nunes@inlook.com",
+    "telefone": "(67) 98098-7654"
+  },
+  {
+    "id_cliente": 18,
+    "primeiro_nome": "Aline",
+    "email": "aline.monteiro@jmail.com",
+    "telefone": "(67) 99901-2345"
+  },
+  {
+    "id_cliente": 19,
+    "primeiro_nome": "Rodrigo",
+    "email": "rodrigo.silva@jmail.com",
+    "telefone": "(67) 99111-2222"
+  },
+  {
+    "id_cliente": 20,
+    "primeiro_nome": "Amanda",
+    "email": "amanda.lima@coldmail.com",
+    "telefone": "(67) 99222-3333"
+  },
+  {
+    "id_cliente": 21,
+    "primeiro_nome": "Felipe",
+    "email": "felipe.gomes@jmail.com",
+    "telefone": "(67) 99333-4444"
+  },
+  {
+    "id_cliente": 22,
+    "primeiro_nome": "Beatriz",
+    "email": "beatriz.rocha@inlook.com",
+    "telefone": "(67) 99444-5555"
+  },
+  {
+    "id_cliente": 23,
+    "primeiro_nome": "Marcelo",
+    "email": "marcelo.dias@hayoo.com.br",
+    "telefone": "(67) 99555-6666"
+  },
+  {
+    "id_cliente": 24,
+    "primeiro_nome": "Camila",
+    "email": "camila.alves@jmail.com",
+    "telefone": "(67) 99666-7777"
+  },
+  {
+    "id_cliente": 25,
+    "primeiro_nome": "Thiago",
+    "email": "thiago.costa@coldmail.com",
+    "telefone": "(67) 99777-8888"
+  },
+  {
+    "id_cliente": 26,
+    "primeiro_nome": "Larissa",
+    "email": "larissa.mendes@jmail.com",
+    "telefone": "(67) 99888-9999"
+  },
+  {
+    "id_cliente": 27,
+    "primeiro_nome": "Bruno",
+    "email": "bruno.carvalho@inlook.com",
+    "telefone": "(67) 99999-0000"
+  },
+  {
+    "id_cliente": 28,
+    "primeiro_nome": "Juliana",
+    "email": "juliana.castro@jmail.com",
+    "telefone": "(67) 99000-1111"
+  },
+  {
+    "id_cliente": 29,
+    "primeiro_nome": "Leonardo",
+    "email": "leonardo.santos@hayoo.com.br",
+    "telefone": "(67) 99123-9876"
+  },
+  {
+    "id_cliente": 30,
+    "primeiro_nome": "Natália",
+    "email": "natalia.martins@jmail.com",
+    "telefone": "(67) 99876-1234"
+  },
+  {
+    "id_cliente": 31,
+    "primeiro_nome": "Joao",
+    "email": "joao.silva@jmail.com",
+    "telefone": "(67) 99111-1234"
+  },
+  {
+    "id_cliente": 32,
+    "primeiro_nome": "Maria",
+    "email": "maria.oliveira@coldmail.com",
+    "telefone": "(67) 99222-2345"
+  },
+  {
+    "id_cliente": 33,
+    "primeiro_nome": "Carlos",
+    "email": "carlos.souza@inlook.com",
+    "telefone": "(67) 99333-3456"
+  },
+  {
+    "id_cliente": 34,
+    "primeiro_nome": "Ana",
+    "email": "ana.costa@hayoo.com.br",
+    "telefone": "(67) 99444-4567"
+  },
+  {
+    "id_cliente": 35,
+    "primeiro_nome": "Pedro",
+    "email": "pedro.santos@jmail.com",
+    "telefone": "(67) 99555-5678"
+  },
+  {
+    "id_cliente": 36,
+    "primeiro_nome": "Paula",
+    "email": "paula.lima@coldmail.com",
+    "telefone": "(67) 99666-6789"
+  },
+  {
+    "id_cliente": 37,
+    "primeiro_nome": "Lucas",
+    "email": "lucas.pereira@inlook.com",
+    "telefone": "(67) 99777-7890"
+  },
+  {
+    "id_cliente": 38,
+    "primeiro_nome": "Julia",
+    "email": "julia.carvalho@hayoo.com.br",
+    "telefone": "(67) 99888-8901"
+  },
+  {
+    "id_cliente": 39,
+    "primeiro_nome": "Marcos",
+    "email": "marcos.rodrigues@jmail.com",
+    "telefone": "(67) 99999-9012"
+  },
+  {
+    "id_cliente": 40,
+    "primeiro_nome": "Fernanda",
+    "email": "fernanda.almeida@coldmail.com",
+    "telefone": "(67) 99123-0123"
+  },
+  {
+    "id_cliente": 41,
+    "primeiro_nome": "Rafael",
+    "email": "rafael.alves@inlook.com",
+    "telefone": "(67) 99234-1234"
+  },
+  {
+    "id_cliente": 42,
+    "primeiro_nome": "Camila",
+    "email": "camila.ribeiro@hayoo.com.br",
+    "telefone": "(67) 99345-2345"
+  },
+  {
+    "id_cliente": 43,
+    "primeiro_nome": "Bruno",
+    "email": "bruno.martins@jmail.com",
+    "telefone": "(67) 99456-3456"
+  },
+  {
+    "id_cliente": 44,
+    "primeiro_nome": "Leticia",
+    "email": "leticia.gomes@coldmail.com",
+    "telefone": "(67) 99567-4567"
+  },
+  {
+    "id_cliente": 45,
+    "primeiro_nome": "Thiago",
+    "email": "thiago.dias@inlook.com",
+    "telefone": "(67) 99678-5678"
+  },
+  {
+    "id_cliente": 46,
+    "primeiro_nome": "Amanda",
+    "email": "amanda.rocha@hayoo.com.br",
+    "telefone": "(67) 99789-6789"
+  },
+  {
+    "id_cliente": 47,
+    "primeiro_nome": "Diego",
+    "email": "diego.castro@jmail.com",
+    "telefone": "(67) 99890-7890"
+  },
+  {
+    "id_cliente": 48,
+    "primeiro_nome": "Beatriz",
+    "email": "beatriz.mendes@coldmail.com",
+    "telefone": "(67) 99901-8901"
+  },
+  {
+    "id_cliente": 49,
+    "primeiro_nome": "Felipe",
+    "email": "felipe.nunes@inlook.com",
+    "telefone": "(67) 99012-9012"
+  },
+  {
+    "id_cliente": 50,
+    "primeiro_nome": "Mariana",
+    "email": "mariana.cardoso@hayoo.com.br",
+    "telefone": "(67) 99123-1111"
+  }
+]

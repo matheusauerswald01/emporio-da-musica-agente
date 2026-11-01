@@ -1,0 +1,350 @@
+[
+  {
+    "id_pedido": 1,
+    "id_cliente": 3,
+    "data_pedido": "2025-10-15",
+    "status": "delivered",
+    "total": 11499.0,
+    "forma_pagamento": "pix",
+    "codigo_rastreio": "BRAB1234567BR",
+    "previsao_entrega": "2025-10-25",
+    "observacao": null,
+    "itens": [
+      {
+        "id_produto": 93,
+        "quantidade": 1
+      }
+    ]
+  },
+  {
+    "id_pedido": 2,
+    "id_cliente": 7,
+    "data_pedido": "2025-11-02",
+    "status": "delivered",
+    "total": 5999.0,
+    "forma_pagamento": "credit_6x",
+    "codigo_rastreio": "BRCX9876543BR",
+    "previsao_entrega": "2025-11-15",
+    "observacao": null,
+    "itens": [
+      {
+        "id_produto": 94,
+        "quantidade": 1
+      }
+    ]
+  },
+  {
+    "id_pedido": 3,
+    "id_cliente": 12,
+    "data_pedido": "2025-11-20",
+    "status": "delivered",
+    "total": 3450.0,
+    "forma_pagamento": "credit_12x",
+    "codigo_rastreio": "BRDZ4561230BR",
+    "previsao_entrega": "2025-12-05",
+    "observacao": null,
+    "itens": [
+      {
+        "id_produto": 130,
+        "quantidade": 2
+      }
+    ]
+  },
+  {
+    "id_pedido": 4,
+    "id_cliente": 1,
+    "data_pedido": "2025-12-10",
+    "status": "delivered",
+    "total": 799.9,
+    "forma_pagamento": "boleto",
+    "codigo_rastreio": "BRQM7890123BR",
+    "previsao_entrega": "2025-12-22",
+    "observacao": null,
+    "itens": [
+      {
+        "id_produto": 96,
+        "quantidade": 1
+      }
+    ]
+  },
+  {
+    "id_pedido": 5,
+    "id_cliente": 5,
+    "data_pedido": "2026-01-05",
+    "status": "delivered",
+    "total": 4599.0,
+    "forma_pagamento": "pix",
+    "codigo_rastreio": "BRTP3456789BR",
+    "previsao_entrega": "2026-01-18",
+    "observacao": null,
+    "itens": [
+      {
+        "id_produto": 97,
+        "quantidade": 1
+      }
+    ]
+  },
+  {
+    "id_pedido": 6,
+    "id_cliente": 9,
+    "data_pedido": "2026-01-18",
+    "status": "delivered",
+    "total": 7499.0,
+    "forma_pagamento": "credit_12x",
+    "codigo_rastreio": "BRVN6543210BR",
+    "previsao_entrega": "2026-02-01",
+    "observacao": null,
+    "itens": [
+      {
+        "id_produto": 106,
+        "quantidade": 1
+      }
+    ]
+  },
+  {
+    "id_pedido": 7,
+    "id_cliente": 14,
+    "data_pedido": "2026-02-03",
+    "status": "delivered",
+    "total": 159.9,
+    "forma_pagamento": "credit_3x",
+    "codigo_rastreio": "BRKR1122334BR",
+    "previsao_entrega": "2026-02-17",
+    "observacao": null,
+    "itens": [
+      {
+        "id_produto": 119,
+        "quantidade": 1
+      }
+    ]
+  },
+  {
+    "id_pedido": 8,
+    "id_cliente": 2,
+    "data_pedido": "2026-02-15",
+    "status": "shipped",
+    "total": 349.9,
+    "forma_pagamento": "debit",
+    "codigo_rastreio": "BRJL5544332BR",
+    "previsao_entrega": "2026-02-28",
+    "observacao": null,
+    "itens": [
+      {
+        "id_produto": 120,
+        "quantidade": 1
+      }
+    ]
+  },
+  {
+    "id_pedido": 9,
+    "id_cliente": 6,
+    "data_pedido": "2026-02-20",
+    "status": "confirmed",
+    "total": 349.9,
+    "forma_pagamento": "credit_6x",
+    "codigo_rastreio": null,
+    "previsao_entrega": null,
+    "observacao": null,
+    "itens": [
+      {
+        "id_produto": 120,
+        "quantidade": 1
+      }
+    ]
+  },
+  {
+    "id_pedido": 10,
+    "id_cliente": 11,
+    "data_pedido": "2026-02-25",
+    "status": "confirmed",
+    "total": 8732.0,
+    "forma_pagamento": "pix",
+    "codigo_rastreio": null,
+    "previsao_entrega": null,
+    "observacao": null,
+    "itens": [
+      {
+        "id_produto": 135,
+        "quantidade": 1
+      }
+    ]
+  },
+  {
+    "id_pedido": 11,
+    "id_cliente": 4,
+    "data_pedido": "2026-03-05",
+    "status": "confirmed",
+    "total": 359.0,
+    "forma_pagamento": "boleto",
+    "codigo_rastreio": null,
+    "previsao_entrega": null,
+    "observacao": null,
+    "itens": [
+      {
+        "id_produto": 127,
+        "quantidade": 1
+      }
+    ]
+  },
+  {
+    "id_pedido": 12,
+    "id_cliente": 16,
+    "data_pedido": "2026-03-10",
+    "status": "confirmed",
+    "total": 599.0,
+    "forma_pagamento": "credit_3x",
+    "codigo_rastreio": null,
+    "previsao_entrega": null,
+    "observacao": null,
+    "itens": [
+      {
+        "id_produto": 128,
+        "quantidade": 1
+      }
+    ]
+  },
+  {
+    "id_pedido": 13,
+    "id_cliente": 8,
+    "data_pedido": "2026-03-12",
+    "status": "pending",
+    "total": 1899.0,
+    "forma_pagamento": "pix",
+    "codigo_rastreio": null,
+    "previsao_entrega": null,
+    "observacao": null,
+    "itens": [
+      {
+        "id_produto": 129,
+        "quantidade": 1
+      }
+    ]
+  },
+  {
+    "id_pedido": 14,
+    "id_cliente": 13,
+    "data_pedido": "2026-03-15",
+    "status": "pending",
+    "total": 1749.0,
+    "forma_pagamento": "debit",
+    "codigo_rastreio": null,
+    "previsao_entrega": null,
+    "observacao": null,
+    "itens": [
+      {
+        "id_produto": 130,
+        "quantidade": 1
+      }
+    ]
+  },
+  {
+    "id_pedido": 15,
+    "id_cliente": 18,
+    "data_pedido": "2026-03-18",
+    "status": "pending",
+    "total": 8348.0,
+    "forma_pagamento": "credit_12x",
+    "codigo_rastreio": null,
+    "previsao_entrega": null,
+    "observacao": null,
+    "itens": [
+      {
+        "id_produto": 82,
+        "quantidade": 1
+      },
+      {
+        "id_produto": 106,
+        "quantidade": 1
+      }
+    ]
+  },
+  {
+    "id_pedido": 16,
+    "id_cliente": 10,
+    "data_pedido": "2026-03-22",
+    "status": "pending",
+    "total": 429.9,
+    "forma_pagamento": "credit_6x",
+    "codigo_rastreio": null,
+    "previsao_entrega": null,
+    "observacao": null,
+    "itens": [
+      {
+        "id_produto": 83,
+        "quantidade": 1
+      }
+    ]
+  },
+  {
+    "id_pedido": 17,
+    "id_cliente": 15,
+    "data_pedido": "2026-01-28",
+    "status": "cancelled",
+    "total": 689.0,
+    "forma_pagamento": "pix",
+    "codigo_rastreio": null,
+    "previsao_entrega": null,
+    "observacao": "Pedido cancelado pelo cliente antes do processamento",
+    "itens": [
+      {
+        "id_produto": 84,
+        "quantidade": 1
+      }
+    ]
+  },
+  {
+    "id_pedido": 18,
+    "id_cliente": 17,
+    "data_pedido": "2026-02-08",
+    "status": "cancelled",
+    "total": 459.9,
+    "forma_pagamento": "credit_12x",
+    "codigo_rastreio": null,
+    "previsao_entrega": null,
+    "observacao": "Item fora de estoque no momento do pedido",
+    "itens": [
+      {
+        "id_produto": 85,
+        "quantidade": 1
+      }
+    ]
+  },
+  {
+    "id_pedido": 19,
+    "id_cliente": 3,
+    "data_pedido": "2026-02-22",
+    "status": "cancelled",
+    "total": 7499.0,
+    "forma_pagamento": "boleto",
+    "codigo_rastreio": null,
+    "previsao_entrega": null,
+    "observacao": "Pagamento não confirmado dentro do prazo",
+    "itens": [
+      {
+        "id_produto": 106,
+        "quantidade": 1
+      }
+    ]
+  },
+  {
+    "id_pedido": 20,
+    "id_cliente": 7,
+    "data_pedido": "2026-03-08",
+    "status": "cancelled",
+    "total": 1400.0,
+    "forma_pagamento": "credit_3x",
+    "codigo_rastreio": null,
+    "previsao_entrega": null,
+    "observacao": "Endereço de entrega inválido informado pelo cliente",
+    "itens": [
+      {
+        "id_produto": 107,
+        "quantidade": 1
+      },
+      {
+        "id_produto": 84,
+        "quantidade": 1
+      }
+    ]
+  }
+]

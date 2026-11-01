@@ -1,0 +1,1494 @@
+[
+  {
+    "id_produto": 81,
+    "nome": "Yamaha C40 Nylon Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 599.9,
+    "estoque": 12,
+    "status": "active",
+    "descricao": "Violão clássico com tampo em Spruce e fundo/laterais em Meranti. Ideal para estudantes e iniciantes, com excelente projeção sonora.",
+    "especificacoes": {
+      "tampo": "Spruce",
+      "fundo e laterais": "Meranti",
+      "braço": "Nato",
+      "cordas": "nylon",
+      "escala": "650mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2021-03-15",
+    "promocoes": []
+  },
+  {
+    "id_produto": 82,
+    "nome": "Yamaha C70 Nylon Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 849.0,
+    "estoque": 8,
+    "status": "active",
+    "descricao": "Violão clássico de nível intermediário com tampo em Spruce sólido. Acabamento de alta qualidade e timbre equilibrado.",
+    "especificacoes": {
+      "tampo": "Spruce Sólido",
+      "fundo e laterais": "Nato",
+      "braço": "Nato",
+      "cordas": "nylon",
+      "escala": "650mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2021-06-20",
+    "promocoes": []
+  },
+  {
+    "id_produto": 83,
+    "nome": "Tagima Memphis AC-39 Nylon Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 429.9,
+    "estoque": 15,
+    "status": "active",
+    "descricao": "Violão clássico com cordas de nylon, perfeito para quem está começando. Corpo leve e confortável para longas sessões de estudo.",
+    "especificacoes": {
+      "tampo": "Linden",
+      "fundo e laterais": "Linden",
+      "braço": "Nato",
+      "cordas": "nylon",
+      "escala": "650mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2020-08-10",
+    "promocoes": []
+  },
+  {
+    "id_produto": 84,
+    "nome": "Giannini GN-15 Nylon Cedr Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 689.0,
+    "estoque": 6,
+    "status": "active",
+    "descricao": "Violão clássico Giannini com tampo em cedro. Sonoridade quente e encorpada, excelente custo-benefício para estudantes avançados.",
+    "especificacoes": {
+      "tampo": "Cedro",
+      "fundo e laterais": "Sapele",
+      "braço": "Cedro",
+      "cordas": "nylon",
+      "escala": "650mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2022-01-05",
+    "promocoes": []
+  },
+  {
+    "id_produto": 85,
+    "nome": "Rozini RC-104 Nylon Estudante",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 459.9,
+    "estoque": 10,
+    "status": "active",
+    "descricao": "Violão clássico de estudo da Rozini, feito com madeiras nacionais. Acabamento caprichado e preço acessível para iniciantes.",
+    "especificacoes": {
+      "tampo": "Spruce",
+      "fundo e laterais": "Sapele",
+      "braço": "Nato",
+      "cordas": "nylon",
+      "escala": "650mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2020-04-22",
+    "promocoes": []
+  },
+  {
+    "id_produto": 86,
+    "nome": "Tagima Dallas Tuner Aço Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 749.0,
+    "estoque": 9,
+    "status": "active",
+    "descricao": "Violão folk com cordas de aço e afinador integrado. Corpo confortável e som brilhante, ideal para acompanhamento vocal.",
+    "especificacoes": {
+      "tampo": "Spruce",
+      "fundo e laterais": "Sapele",
+      "braço": "Nato",
+      "cordas": "steel",
+      "escala": "648mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2021-09-14",
+    "promocoes": []
+  },
+  {
+    "id_produto": 87,
+    "nome": "Yamaha F310 Aço Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 699.9,
+    "estoque": 14,
+    "status": "active",
+    "descricao": "Violão folk aço Yamaha com corpo robusto e timbre encorpado. Um dos modelos mais vendidos do mundo para iniciantes e intermediários.",
+    "especificacoes": {
+      "tampo": "Spruce",
+      "fundo e laterais": "Meranti",
+      "braço": "Nato",
+      "cordas": "steel",
+      "escala": "634mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2020-11-30",
+    "promocoes": []
+  },
+  {
+    "id_produto": 88,
+    "nome": "Giannini GF-1R Aço Folk Sunburst",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 579.9,
+    "estoque": 7,
+    "status": "active",
+    "descricao": "Violão folk com tampo em Spruce e acabamento Sunburst clássico. Som equilibrado e visual elegante para palco e estúdio.",
+    "especificacoes": {
+      "tampo": "Spruce",
+      "fundo e laterais": "Sapele",
+      "braço": "Nato",
+      "cordas": "steel",
+      "escala": "648mm",
+      "eletrônica": "no",
+      "cor": "Sunburst"
+    },
+    "criado_em": "2022-05-18",
+    "promocoes": []
+  },
+  {
+    "id_produto": 89,
+    "nome": "Shelby SN-100 Folk Aço Preto",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 549.0,
+    "estoque": 5,
+    "status": "active",
+    "descricao": "Violão folk aço com visual moderno em preto. Indicado para quem busca um instrumento versátil com boa relação custo-benefício.",
+    "especificacoes": {
+      "tampo": "Linden",
+      "fundo e laterais": "Linden",
+      "braço": "Nato",
+      "cordas": "steel",
+      "escala": "648mm",
+      "eletrônica": "no",
+      "cor": "Preto"
+    },
+    "criado_em": "2023-02-10",
+    "promocoes": []
+  },
+  {
+    "id_produto": 90,
+    "nome": "Crafter HT-100 Folk Aço Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 2399.0,
+    "estoque": 3,
+    "status": "active",
+    "descricao": "Violão folk de alta qualidade com tampo sólido em Spruce Engelmann. Projeção sonora superior e acabamento impecável.",
+    "especificacoes": {
+      "tampo": "Spruce Engelmann Sólido",
+      "fundo e laterais": "Mogno",
+      "braço": "Mogno",
+      "cordas": "steel",
+      "escala": "648mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2021-07-25",
+    "promocoes": [
+      {
+        "id_promocao": 19,
+        "desconto_percentual": 18,
+        "campanha": "Desconto Exclusivo",
+        "ativa": true
+      }
+    ]
+  },
+  {
+    "id_produto": 91,
+    "nome": "Tagima Woodstock Dreadnought Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 899.0,
+    "estoque": 11,
+    "status": "active",
+    "descricao": "Violão dreadnought com corpo amplo e som potente. Excelente para fingerpicking e strumming com projeção impressionante.",
+    "especificacoes": {
+      "tampo": "Spruce",
+      "fundo e laterais": "Sapele",
+      "braço": "Nato",
+      "cordas": "steel",
+      "escala": "650mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2022-03-08",
+    "promocoes": [
+      {
+        "id_promocao": 7,
+        "desconto_percentual": 30,
+        "campanha": "Black Friday",
+        "ativa": false
+      }
+    ]
+  },
+  {
+    "id_produto": 92,
+    "nome": "Yamaha FG800 Dreadnought Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 1299.0,
+    "estoque": 7,
+    "status": "active",
+    "descricao": "Violão dreadnought Yamaha com tampo sólido em Spruce. Tecnologia de bracing exclusiva para som rico e encorpado.",
+    "especificacoes": {
+      "tampo": "Spruce Sólido",
+      "fundo e laterais": "Nato",
+      "braço": "Nato",
+      "cordas": "steel",
+      "escala": "650mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2020-06-15",
+    "promocoes": []
+  },
+  {
+    "id_produto": 93,
+    "nome": "Martin D-28 Dreadnought Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 11499.0,
+    "estoque": 2,
+    "status": "active",
+    "descricao": "Lendário violão Martin D-28 com tampo sólido em Sitka Spruce e fundo em Rosewood. Referência mundial em sonoridade e construção.",
+    "especificacoes": {
+      "tampo": "Sitka Spruce Sólido",
+      "fundo e laterais": "East Indian Rosewood",
+      "braço": "Select Hardwood",
+      "cordas": "steel",
+      "escala": "645mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2023-01-20",
+    "promocoes": [
+      {
+        "id_promocao": 6,
+        "desconto_percentual": 15,
+        "campanha": "Promoção de Páscoa",
+        "ativa": false
+      },
+      {
+        "id_promocao": 23,
+        "desconto_percentual": 10,
+        "campanha": "Promoção de Páscoa",
+        "ativa": false
+      }
+    ]
+  },
+  {
+    "id_produto": 94,
+    "nome": "Taylor 110e Dreadnought Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 5999.0,
+    "estoque": 4,
+    "status": "active",
+    "descricao": "Violão dreadnought Taylor com tampo sólido em Sitka Spruce e eletrônica ES2. Perfeito para palco com som amplificado de alta fidelidade.",
+    "especificacoes": {
+      "tampo": "Sitka Spruce Sólido",
+      "fundo e laterais": "Walnut",
+      "braço": "Tropical Mahogany",
+      "cordas": "steel",
+      "escala": "648mm",
+      "eletrônica": "yes",
+      "cor": "Natural"
+    },
+    "criado_em": "2022-09-12",
+    "promocoes": [
+      {
+        "id_promocao": 24,
+        "desconto_percentual": 8,
+        "campanha": "Desconto Exclusivo",
+        "ativa": true
+      }
+    ]
+  },
+  {
+    "id_produto": 95,
+    "nome": "Takamine GD20 Dreadnought Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 2199.0,
+    "estoque": 5,
+    "status": "active",
+    "descricao": "Violão dreadnought Takamine com tampo sólido em cedro. Excelente para fingerstyle com timbre quente e definido.",
+    "especificacoes": {
+      "tampo": "Cedro Sólido",
+      "fundo e laterais": "Sapele",
+      "braço": "Mogno",
+      "cordas": "steel",
+      "escala": "650mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2021-11-03",
+    "promocoes": [
+      {
+        "id_promocao": 4,
+        "desconto_percentual": 12,
+        "campanha": "Oferta Especial",
+        "ativa": false
+      }
+    ]
+  },
+  {
+    "id_produto": 96,
+    "nome": "Giannini GF-3D Dreadnought Sunburst",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 799.9,
+    "estoque": 0,
+    "status": "active",
+    "descricao": "Violão dreadnought com corpo amplo e acabamento Sunburst. Volume alto e graves profundos, ideal para country e pop.",
+    "especificacoes": {
+      "tampo": "Spruce",
+      "fundo e laterais": "Sapele",
+      "braço": "Nato",
+      "cordas": "steel",
+      "escala": "650mm",
+      "eletrônica": "no",
+      "cor": "Sunburst"
+    },
+    "criado_em": "2020-02-28",
+    "promocoes": [
+      {
+        "id_promocao": 8,
+        "desconto_percentual": 18,
+        "campanha": "Semana do Músico",
+        "ativa": false
+      },
+      {
+        "id_promocao": 22,
+        "desconto_percentual": 40,
+        "campanha": "Semana do Músico",
+        "ativa": false
+      }
+    ]
+  },
+  {
+    "id_produto": 97,
+    "nome": "Crafter D-8 Dreadnought Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 4599.0,
+    "estoque": 2,
+    "status": "active",
+    "descricao": "Violão dreadnought premium com tampo sólido em Spruce Sitka e fundo em Rosewood. Acabamento artesanal e som excepcional.",
+    "especificacoes": {
+      "tampo": "Sitka Spruce Sólido",
+      "fundo e laterais": "Rosewood",
+      "braço": "Mogno",
+      "cordas": "steel",
+      "escala": "650mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2023-05-14",
+    "promocoes": []
+  },
+  {
+    "id_produto": 98,
+    "nome": "Yamaha NTX1 Elétrico Nylon Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 3499.0,
+    "estoque": 6,
+    "status": "active",
+    "descricao": "Violão eletroacústico com cordas de nylon e captação Atmosfeel. Braço estreito e corpo fino para conforto máximo em apresentações ao vivo.",
+    "especificacoes": {
+      "tampo": "Spruce Sólido",
+      "fundo e laterais": "Nato",
+      "braço": "Nato",
+      "cordas": "nylon",
+      "escala": "650mm",
+      "eletrônica": "yes",
+      "cor": "Natural"
+    },
+    "criado_em": "2022-04-20",
+    "promocoes": []
+  },
+  {
+    "id_produto": 99,
+    "nome": "Tagima Classical Elétrico Nylon Sunburst",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 1199.0,
+    "estoque": 8,
+    "status": "active",
+    "descricao": "Violão eletroacústico nylon com pré-amplificador e afinador embutido. Versátil para palco e estúdio com excelente resposta tonal.",
+    "especificacoes": {
+      "tampo": "Spruce",
+      "fundo e laterais": "Sapele",
+      "braço": "Nato",
+      "cordas": "nylon",
+      "escala": "650mm",
+      "eletrônica": "yes",
+      "cor": "Sunburst"
+    },
+    "criado_em": "2021-08-07",
+    "promocoes": [
+      {
+        "id_promocao": 9,
+        "desconto_percentual": 8,
+        "campanha": "Promoção de Páscoa",
+        "ativa": false
+      },
+      {
+        "id_promocao": 25,
+        "desconto_percentual": 14,
+        "campanha": "Aniversário da Loja",
+        "ativa": false
+      }
+    ]
+  },
+  {
+    "id_produto": 100,
+    "nome": "Takamine GC5CE Elétrico Nylon Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 3299.0,
+    "estoque": 3,
+    "status": "active",
+    "descricao": "Violão eletroacústico clássico com captação TP-4T e tampo sólido em Spruce. Ideal para músicos profissionais que precisam de amplificação.",
+    "especificacoes": {
+      "tampo": "Spruce Sólido",
+      "fundo e laterais": "Rosewood",
+      "braço": "Mogno",
+      "cordas": "nylon",
+      "escala": "650mm",
+      "eletrônica": "yes",
+      "cor": "Natural"
+    },
+    "criado_em": "2023-07-30",
+    "promocoes": []
+  },
+  {
+    "id_produto": 101,
+    "nome": "Giannini GNF-3 CEQ Elétrico Nylon Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 1049.0,
+    "estoque": 4,
+    "status": "active",
+    "descricao": "Violão eletroacústico nylon Giannini com equalizador de 4 bandas. Construção robusta e som amplificado de qualidade profissional.",
+    "especificacoes": {
+      "tampo": "Spruce",
+      "fundo e laterais": "Sapele",
+      "braço": "Nato",
+      "cordas": "nylon",
+      "escala": "650mm",
+      "eletrônica": "yes",
+      "cor": "Natural"
+    },
+    "criado_em": "2020-10-15",
+    "promocoes": []
+  },
+  {
+    "id_produto": 102,
+    "nome": "Crafter CE-15 Elétrico Nylon Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 3899.0,
+    "estoque": 2,
+    "status": "active",
+    "descricao": "Violão eletroacústico nylon Crafter com sistema de captação LR Baggs. Tampo sólido e projeção excepcional tanto acústica quanto amplificada.",
+    "especificacoes": {
+      "tampo": "Cedro Sólido",
+      "fundo e laterais": "Rosewood",
+      "braço": "Mogno",
+      "cordas": "nylon",
+      "escala": "650mm",
+      "eletrônica": "yes",
+      "cor": "Natural"
+    },
+    "criado_em": "2024-01-10",
+    "promocoes": [
+      {
+        "id_promocao": 1,
+        "desconto_percentual": 10,
+        "campanha": "Black Friday",
+        "ativa": false
+      }
+    ]
+  },
+  {
+    "id_produto": 103,
+    "nome": "Tagima Vegas Elétrico Aço Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 1349.0,
+    "estoque": 9,
+    "status": "active",
+    "descricao": "Violão eletroacústico aço com corpo Folk e captação ativa. Som brilhante amplificado com presença marcante nos médios.",
+    "especificacoes": {
+      "tampo": "Spruce",
+      "fundo e laterais": "Sapele",
+      "braço": "Nato",
+      "cordas": "steel",
+      "escala": "648mm",
+      "eletrônica": "yes",
+      "cor": "Natural"
+    },
+    "criado_em": "2022-06-25",
+    "promocoes": []
+  },
+  {
+    "id_produto": 104,
+    "nome": "Yamaha APX600 Elétrico Aço Preto",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 1899.0,
+    "estoque": 7,
+    "status": "active",
+    "descricao": "Violão eletroacústico Yamaha com corpo slim e captação piezo. Design moderno e confortável para performances no palco.",
+    "especificacoes": {
+      "tampo": "Spruce",
+      "fundo e laterais": "Nato",
+      "braço": "Nato",
+      "cordas": "steel",
+      "escala": "634mm",
+      "eletrônica": "yes",
+      "cor": "Preto"
+    },
+    "criado_em": "2021-04-18",
+    "promocoes": []
+  },
+  {
+    "id_produto": 105,
+    "nome": "Takamine GN51CE Elétrico Aço Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 4199.0,
+    "estoque": 3,
+    "status": "active",
+    "descricao": "Violão eletroacústico NEX com tampo sólido em Spruce e pré-amplificador CTP-3. Versatilidade tonal para diversos estilos musicais.",
+    "especificacoes": {
+      "tampo": "Spruce Sólido",
+      "fundo e laterais": "Walnut",
+      "braço": "Mogno",
+      "cordas": "steel",
+      "escala": "648mm",
+      "eletrônica": "yes",
+      "cor": "Natural"
+    },
+    "criado_em": "2023-03-05",
+    "promocoes": []
+  },
+  {
+    "id_produto": 106,
+    "nome": "Taylor 214ce Elétrico Aço Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 7499.0,
+    "estoque": 2,
+    "status": "active",
+    "descricao": "Violão eletroacústico Taylor Grand Auditorium com tampo sólido em Sitka Spruce. Sistema ES2 para som amplificado cristalino.",
+    "especificacoes": {
+      "tampo": "Sitka Spruce Sólido",
+      "fundo e laterais": "Layered Rosewood",
+      "braço": "Tropical Mahogany",
+      "cordas": "steel",
+      "escala": "648mm",
+      "eletrônica": "yes",
+      "cor": "Natural"
+    },
+    "criado_em": "2024-02-14",
+    "promocoes": [
+      {
+        "id_promocao": 15,
+        "desconto_percentual": 12,
+        "campanha": "Semana do Músico",
+        "ativa": false
+      }
+    ]
+  },
+  {
+    "id_produto": 107,
+    "nome": "Shelby SGD-195E Elétrico Aço Sunburst",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 799.0,
+    "estoque": 6,
+    "status": "active",
+    "descricao": "Violão eletroacústico dreadnought com captação e afinador integrado. Boa opção de custo-benefício para quem precisa de amplificação.",
+    "especificacoes": {
+      "tampo": "Spruce",
+      "fundo e laterais": "Sapele",
+      "braço": "Nato",
+      "cordas": "steel",
+      "escala": "650mm",
+      "eletrônica": "yes",
+      "cor": "Sunburst"
+    },
+    "criado_em": "2022-12-01",
+    "promocoes": []
+  },
+  {
+    "id_produto": 108,
+    "nome": "Martin D-28E Elétrico Aço Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 12000.0,
+    "estoque": 1,
+    "status": "active",
+    "descricao": "O lendário Martin D-28 com captação LR Baggs Anthem. Todo o timbre clássico do D-28 com amplificação de nível profissional.",
+    "especificacoes": {
+      "tampo": "Sitka Spruce Sólido",
+      "fundo e laterais": "East Indian Rosewood",
+      "braço": "Select Hardwood",
+      "cordas": "steel",
+      "escala": "645mm",
+      "eletrônica": "yes",
+      "cor": "Natural"
+    },
+    "criado_em": "2024-05-20",
+    "promocoes": []
+  },
+  {
+    "id_produto": 109,
+    "nome": "Rozini RV-174 7 Cordas Nylon Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 1299.0,
+    "estoque": 5,
+    "status": "active",
+    "descricao": "Violão 7 cordas com tampo em Spruce e braço reforçado. Ideal para choro e samba com baixaria rica e definida.",
+    "especificacoes": {
+      "tampo": "Spruce",
+      "fundo e laterais": "Sapele",
+      "braço": "Cedro",
+      "cordas": "nylon",
+      "escala": "650mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2020-09-08",
+    "promocoes": []
+  },
+  {
+    "id_produto": 110,
+    "nome": "Giannini GWNE-7 7 Cordas Nylon Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 1149.0,
+    "estoque": 4,
+    "status": "active",
+    "descricao": "Violão de 7 cordas Giannini para choro e MPB. Construção brasileira tradicional com excelente resposta nos graves.",
+    "especificacoes": {
+      "tampo": "Spruce",
+      "fundo e laterais": "Sapele",
+      "braço": "Cedro",
+      "cordas": "nylon",
+      "escala": "650mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2021-01-22",
+    "promocoes": [
+      {
+        "id_promocao": 2,
+        "desconto_percentual": 15,
+        "campanha": "Liquidação de Inverno",
+        "ativa": false
+      }
+    ]
+  },
+  {
+    "id_produto": 111,
+    "nome": "Rozini RV-175 7 Cordas Elétrico Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 1699.0,
+    "estoque": 3,
+    "status": "active",
+    "descricao": "Violão 7 cordas eletroacústico com captação sob o tampo. Perfeito para rodas de choro amplificadas e gravações em estúdio.",
+    "especificacoes": {
+      "tampo": "Spruce Sólido",
+      "fundo e laterais": "Jacarandá",
+      "braço": "Cedro",
+      "cordas": "nylon",
+      "escala": "650mm",
+      "eletrônica": "yes",
+      "cor": "Natural"
+    },
+    "criado_em": "2022-07-15",
+    "promocoes": []
+  },
+  {
+    "id_produto": 112,
+    "nome": "Tagima TW-7 7 Cordas Aço Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 999.0,
+    "estoque": 6,
+    "status": "active",
+    "descricao": "Violão 7 cordas com cordas de aço para estilos que exigem projeção extra. Braço confortável com tensor regulável.",
+    "especificacoes": {
+      "tampo": "Spruce",
+      "fundo e laterais": "Sapele",
+      "braço": "Nato",
+      "cordas": "steel",
+      "escala": "650mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2023-04-10",
+    "promocoes": []
+  },
+  {
+    "id_produto": 113,
+    "nome": "Shelby SN-7C 7 Cordas Nylon Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 749.0,
+    "estoque": 0,
+    "status": "discontinued",
+    "descricao": "Violão 7 cordas clássico com acabamento natural e braço em cedro. Boa opção para estudantes de choro que buscam qualidade acessível.",
+    "especificacoes": {
+      "tampo": "Linden",
+      "fundo e laterais": "Linden",
+      "braço": "Cedro",
+      "cordas": "nylon",
+      "escala": "650mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2020-03-05",
+    "promocoes": [
+      {
+        "id_promocao": 16,
+        "desconto_percentual": 25,
+        "campanha": "Black Friday",
+        "ativa": false
+      }
+    ]
+  },
+  {
+    "id_produto": 114,
+    "nome": "Yamaha CG162S Nylon Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 1699.0,
+    "estoque": 4,
+    "status": "active",
+    "descricao": "Violão clássico Yamaha com tampo sólido em Spruce Engelmann. Acabamento refinado e sonoridade de concerto para estudantes avançados.",
+    "especificacoes": {
+      "tampo": "Spruce Engelmann Sólido",
+      "fundo e laterais": "Ovangkol",
+      "braço": "Nato",
+      "cordas": "nylon",
+      "escala": "650mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2023-09-18",
+    "promocoes": []
+  },
+  {
+    "id_produto": 115,
+    "nome": "Takamine GC1CE Elétrico Nylon Natural",
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "preco_tabela": 2499.0,
+    "estoque": 5,
+    "status": "active",
+    "descricao": "Violão eletroacústico clássico Takamine com tampo sólido em Spruce e pré TP-4T. Excelente para apresentações ao vivo com som natural.",
+    "especificacoes": {
+      "tampo": "Spruce Sólido",
+      "fundo e laterais": "Sapele",
+      "braço": "Mogno",
+      "cordas": "nylon",
+      "escala": "650mm",
+      "eletrônica": "yes",
+      "cor": "Natural"
+    },
+    "criado_em": "2024-03-22",
+    "promocoes": []
+  },
+  {
+    "id_produto": 116,
+    "nome": "Kala KA-15S Soprano Mogno",
+    "id_categoria": 9,
+    "categoria": "Ukuleles",
+    "preco_tabela": 199.9,
+    "estoque": 15,
+    "status": "active",
+    "descricao": "Ukulele soprano Kala com corpo em mogno e cordas Aquila. Som doce e tradicional, perfeito para iniciantes e viajantes.",
+    "especificacoes": {
+      "tampo": "Mogno",
+      "fundo e laterais": "Mogno",
+      "braço": "Mogno",
+      "cordas": "nylon",
+      "escala": "346mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2021-05-12",
+    "promocoes": [
+      {
+        "id_promocao": 10,
+        "desconto_percentual": 20,
+        "campanha": "Aniversário da Loja",
+        "ativa": false
+      }
+    ]
+  },
+  {
+    "id_produto": 117,
+    "nome": "Ohana SK-10 Soprano Natural",
+    "id_categoria": 9,
+    "categoria": "Ukuleles",
+    "preco_tabela": 249.9,
+    "estoque": 10,
+    "status": "active",
+    "descricao": "Ukulele soprano Ohana com acabamento acetinado e cordas Aquila. Construção leve e timbre claro, ótimo custo-benefício.",
+    "especificacoes": {
+      "tampo": "Mogno",
+      "fundo e laterais": "Mogno",
+      "braço": "Mogno",
+      "cordas": "nylon",
+      "escala": "346mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2022-02-28",
+    "promocoes": []
+  },
+  {
+    "id_produto": 118,
+    "nome": "Kalani KAL-300S Soprano Natural",
+    "id_categoria": 9,
+    "categoria": "Ukuleles",
+    "preco_tabela": 179.9,
+    "estoque": 12,
+    "status": "active",
+    "descricao": "Ukulele soprano Kalani com tampo em Spruce e corpo em Sapele. Projeção surpreendente para um instrumento compacto.",
+    "especificacoes": {
+      "tampo": "Spruce",
+      "fundo e laterais": "Sapele",
+      "braço": "Nato",
+      "cordas": "nylon",
+      "escala": "346mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2020-07-19",
+    "promocoes": []
+  },
+  {
+    "id_produto": 119,
+    "nome": "Shelby SU-21S Soprano Sunburst",
+    "id_categoria": 9,
+    "categoria": "Ukuleles",
+    "preco_tabela": 159.9,
+    "estoque": 8,
+    "status": "active",
+    "descricao": "Ukulele soprano com acabamento Sunburst e escala em Rosewood. Visual clássico e som alegre para músicos de todos os níveis.",
+    "especificacoes": {
+      "tampo": "Linden",
+      "fundo e laterais": "Linden",
+      "braço": "Nato",
+      "cordas": "nylon",
+      "escala": "346mm",
+      "eletrônica": "no",
+      "cor": "Sunburst"
+    },
+    "criado_em": "2021-10-03",
+    "promocoes": [
+      {
+        "id_promocao": 11,
+        "desconto_percentual": 10,
+        "campanha": "Liquidação de Inverno",
+        "ativa": false
+      }
+    ]
+  },
+  {
+    "id_produto": 120,
+    "nome": "Kala KA-C Concert Mogno",
+    "id_categoria": 9,
+    "categoria": "Ukuleles",
+    "preco_tabela": 349.9,
+    "estoque": 9,
+    "status": "active",
+    "descricao": "Ukulele concert Kala com corpo em mogno maciço e acabamento acetinado. Escala maior para mais conforto e volume.",
+    "especificacoes": {
+      "tampo": "Mogno",
+      "fundo e laterais": "Mogno",
+      "braço": "Mogno",
+      "cordas": "nylon",
+      "escala": "381mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2022-08-14",
+    "promocoes": []
+  },
+  {
+    "id_produto": 121,
+    "nome": "Ohana CK-20 Concert Natural",
+    "id_categoria": 9,
+    "categoria": "Ukuleles",
+    "preco_tabela": 549.0,
+    "estoque": 6,
+    "status": "active",
+    "descricao": "Ukulele concert Ohana com tampo sólido em Spruce e fundo em Mogno. Tom equilibrado e sustain impressionante para a categoria.",
+    "especificacoes": {
+      "tampo": "Spruce Sólido",
+      "fundo e laterais": "Mogno",
+      "braço": "Mogno",
+      "cordas": "nylon",
+      "escala": "381mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2023-06-20",
+    "promocoes": [
+      {
+        "id_promocao": 14,
+        "desconto_percentual": 20,
+        "campanha": "Desconto Exclusivo",
+        "ativa": true
+      }
+    ]
+  },
+  {
+    "id_produto": 122,
+    "nome": "Kalani KAL-500C Concert Elétrico Natural",
+    "id_categoria": 9,
+    "categoria": "Ukuleles",
+    "preco_tabela": 479.0,
+    "estoque": 5,
+    "status": "active",
+    "descricao": "Ukulele concert eletroacústico com captação piezo e pré-amplificador. Versátil para palco e estúdio com timbre amplificado fiel.",
+    "especificacoes": {
+      "tampo": "Mogno",
+      "fundo e laterais": "Mogno",
+      "braço": "Mogno",
+      "cordas": "nylon",
+      "escala": "381mm",
+      "eletrônica": "yes",
+      "cor": "Natural"
+    },
+    "criado_em": "2024-04-08",
+    "promocoes": [
+      {
+        "id_promocao": 3,
+        "desconto_percentual": 20,
+        "campanha": "Queima de Estoque",
+        "ativa": false
+      }
+    ]
+  },
+  {
+    "id_produto": 123,
+    "nome": "Kala KA-SMHCE Concert Elétrico Mogno",
+    "id_categoria": 9,
+    "categoria": "Ukuleles",
+    "preco_tabela": 899.0,
+    "estoque": 3,
+    "status": "active",
+    "descricao": "Ukulele concert eletroacústico Kala com tampo sólido em mogno e captação. Acabamento premium e som rico para performances profissionais.",
+    "especificacoes": {
+      "tampo": "Mogno Sólido",
+      "fundo e laterais": "Mogno",
+      "braço": "Mogno",
+      "cordas": "nylon",
+      "escala": "381mm",
+      "eletrônica": "yes",
+      "cor": "Natural"
+    },
+    "criado_em": "2023-11-15",
+    "promocoes": []
+  },
+  {
+    "id_produto": 124,
+    "nome": "Kala KA-T Tenor Mogno",
+    "id_categoria": 9,
+    "categoria": "Ukuleles",
+    "preco_tabela": 449.9,
+    "estoque": 7,
+    "status": "active",
+    "descricao": "Ukulele tenor Kala em mogno com escala estendida para maior conforto. Graves mais presentes e volume superior ao soprano e concert.",
+    "especificacoes": {
+      "tampo": "Mogno",
+      "fundo e laterais": "Mogno",
+      "braço": "Mogno",
+      "cordas": "nylon",
+      "escala": "432mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2021-12-10",
+    "promocoes": []
+  },
+  {
+    "id_produto": 125,
+    "nome": "Ohana TK-35G Tenor Sólido Natural",
+    "id_categoria": 9,
+    "categoria": "Ukuleles",
+    "preco_tabela": 1299.0,
+    "estoque": 2,
+    "status": "active",
+    "descricao": "Ukulele tenor Ohana com tampo sólido em Spruce e fundo em Acácia. Projeção e definição excepcionais para músicos exigentes.",
+    "especificacoes": {
+      "tampo": "Spruce Sólido",
+      "fundo e laterais": "Acácia",
+      "braço": "Mogno",
+      "cordas": "nylon",
+      "escala": "432mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2024-06-01",
+    "promocoes": [
+      {
+        "id_promocao": 17,
+        "desconto_percentual": 30,
+        "campanha": "Aniversário da Loja",
+        "ativa": false
+      }
+    ]
+  },
+  {
+    "id_produto": 126,
+    "nome": "Kala KA-SRT-CTG Tenor Elétrico Cedar",
+    "id_categoria": 9,
+    "categoria": "Ukuleles",
+    "preco_tabela": 1599.0,
+    "estoque": 4,
+    "status": "active",
+    "descricao": "Ukulele tenor eletroacústico com tampo sólido em cedro e captação. Som quente e encorpado amplificado, ideal para apresentações ao vivo.",
+    "especificacoes": {
+      "tampo": "Cedro Sólido",
+      "fundo e laterais": "Acácia",
+      "braço": "Mogno",
+      "cordas": "nylon",
+      "escala": "432mm",
+      "eletrônica": "yes",
+      "cor": "Natural"
+    },
+    "criado_em": "2023-08-22",
+    "promocoes": [
+      {
+        "id_promocao": 5,
+        "desconto_percentual": 25,
+        "campanha": "Aniversário da Loja",
+        "ativa": false
+      }
+    ]
+  },
+  {
+    "id_produto": 127,
+    "nome": "Kalani KAL-700T Tenor Natural",
+    "id_categoria": 9,
+    "categoria": "Ukuleles",
+    "preco_tabela": 359.0,
+    "estoque": 11,
+    "status": "active",
+    "descricao": "Ukulele tenor Kalani com corpo em Sapele e tampo em Spruce. Boa relação custo-benefício para quem busca um instrumento maior.",
+    "especificacoes": {
+      "tampo": "Spruce",
+      "fundo e laterais": "Sapele",
+      "braço": "Nato",
+      "cordas": "nylon",
+      "escala": "432mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2022-10-30",
+    "promocoes": [
+      {
+        "id_promocao": 12,
+        "desconto_percentual": 10,
+        "campanha": "Oferta Especial",
+        "ativa": true
+      }
+    ]
+  },
+  {
+    "id_produto": 128,
+    "nome": "Kala KA-B Barítono Mogno",
+    "id_categoria": 9,
+    "categoria": "Ukuleles",
+    "preco_tabela": 599.0,
+    "estoque": 4,
+    "status": "active",
+    "descricao": "Ukulele barítono Kala em mogno com afinação em DGBE. Corpo amplo com graves profundos, uma ponte entre o ukulele e o violão.",
+    "especificacoes": {
+      "tampo": "Mogno",
+      "fundo e laterais": "Mogno",
+      "braço": "Mogno",
+      "cordas": "nylon",
+      "escala": "502mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2021-02-17",
+    "promocoes": []
+  },
+  {
+    "id_produto": 129,
+    "nome": "Ohana BK-35E Barítono Elétrico Natural",
+    "id_categoria": 9,
+    "categoria": "Ukuleles",
+    "preco_tabela": 1899.0,
+    "estoque": 1,
+    "status": "active",
+    "descricao": "Ukulele barítono eletroacústico com tampo sólido e captação integrada. Projeção impressionante e versatilidade para músicos de palco.",
+    "especificacoes": {
+      "tampo": "Spruce Sólido",
+      "fundo e laterais": "Acácia",
+      "braço": "Mogno",
+      "cordas": "nylon",
+      "escala": "502mm",
+      "eletrônica": "yes",
+      "cor": "Natural"
+    },
+    "criado_em": "2024-01-30",
+    "promocoes": []
+  },
+  {
+    "id_produto": 130,
+    "nome": "Kala KA-ABP-CTG Barítono Cedar",
+    "id_categoria": 9,
+    "categoria": "Ukuleles",
+    "preco_tabela": 1749.0,
+    "estoque": 2,
+    "status": "coming_soon",
+    "descricao": "Ukulele barítono premium com tampo sólido em cedro e fundo em Pau Ferro. Sonoridade madura e profunda, perfeito para arranjos complexos.",
+    "especificacoes": {
+      "tampo": "Cedro Sólido",
+      "fundo e laterais": "Pau Ferro",
+      "braço": "Mogno",
+      "cordas": "nylon",
+      "escala": "502mm",
+      "eletrônica": "no",
+      "cor": "Natural"
+    },
+    "criado_em": "2025-05-15",
+    "promocoes": []
+  },
+  {
+    "id_produto": 131,
+    "nome": "Gibson Les Paul Standard '50s",
+    "id_categoria": 1,
+    "categoria": "Guitarras",
+    "preco_tabela": 18900.0,
+    "estoque": 2,
+    "status": "active",
+    "descricao": "Guitarra elétrica Gibson Les Paul com captadores Burstbucker. Timbre encorpado e sustain infinito, ideal para rock e blues.",
+    "especificacoes": {
+      "corpo": "Mahogany",
+      "braço": "Mahogany",
+      "cordas": "6",
+      "cor": "Heritage Cherry Sunburst"
+    },
+    "criado_em": "2022-11-10",
+    "promocoes": []
+  },
+  {
+    "id_produto": 132,
+    "nome": "Ibanez RG550 Genesis Collection",
+    "id_categoria": 1,
+    "categoria": "Guitarras",
+    "preco_tabela": 7500.0,
+    "estoque": 8,
+    "status": "active",
+    "descricao": "Guitarra elétrica Ibanez RG com ponte Edge tremolo e captadores V7/S1/V8. Braço Super Wizard super rápido para shred e metal.",
+    "especificacoes": {
+      "corpo": "Basswood",
+      "braço": "Maple/Walnut",
+      "cordas": "6",
+      "cor": "Desert Sun Yellow"
+    },
+    "criado_em": "2023-05-20",
+    "promocoes": []
+  },
+  {
+    "id_produto": 133,
+    "nome": "PRS SE Custom 24",
+    "id_categoria": 1,
+    "categoria": "Guitarras",
+    "preco_tabela": 6800.0,
+    "estoque": 12,
+    "status": "active",
+    "descricao": "Guitarra elétrica PRS SE com 24 trastes e captadores 85/15 \"S\". Versatilidade incrível com split de bobina e visual deslumbrante.",
+    "especificacoes": {
+      "corpo": "Mahogany/Maple",
+      "braço": "Maple",
+      "cordas": "6",
+      "cor": "Eriza Verde"
+    },
+    "criado_em": "2024-02-05",
+    "promocoes": [
+      {
+        "id_promocao": 18,
+        "desconto_percentual": 5,
+        "campanha": "Oferta Especial",
+        "ativa": false
+      }
+    ]
+  },
+  {
+    "id_produto": 134,
+    "nome": "Fender Telecaster Player Series",
+    "id_categoria": 1,
+    "categoria": "Guitarras",
+    "preco_tabela": 5400.0,
+    "estoque": 15,
+    "status": "active",
+    "descricao": "Guitarra elétrica Fender Telecaster com 2 captadores Player Series Alnico 5. O autêntico \"twang\" da Fender com tocabilidade moderna.",
+    "especificacoes": {
+      "corpo": "Alder",
+      "braço": "Maple",
+      "cordas": "6",
+      "cor": "Butterscotch Blonde"
+    },
+    "criado_em": "2023-08-12",
+    "promocoes": [
+      {
+        "id_promocao": 13,
+        "desconto_percentual": 15,
+        "campanha": "Queima de Estoque",
+        "ativa": false
+      }
+    ]
+  },
+  {
+    "id_produto": 135,
+    "nome": "Music Man Bass 1X Electric Bass",
+    "id_categoria": 2,
+    "categoria": "Baixos",
+    "preco_tabela": 8732.0,
+    "estoque": 9,
+    "status": "active",
+    "descricao": "Contrabaixo elétrico Fender Jazz Bass com corpo em Alder e dois captadores single-coil. Timbre estalado e versatilidade lendária para funk e rock.",
+    "especificacoes": {
+      "corpo": "Ash",
+      "braço": "Maple",
+      "cordas": "4",
+      "cor": "Red"
+    },
+    "criado_em": "2023-06-20",
+    "promocoes": []
+  },
+  {
+    "id_produto": 136,
+    "nome": "Ibanez Bass 2X Electric Bass",
+    "id_categoria": 2,
+    "categoria": "Baixos",
+    "preco_tabela": 441.0,
+    "estoque": 13,
+    "status": "discontinued",
+    "descricao": "Contrabaixo Precision de 4 cordas com captação split-coil. O clássico peso e punch nos graves, perfeito para gravações em estúdio.",
+    "especificacoes": {
+      "corpo": "Ash",
+      "braço": "Maple",
+      "cordas": "4",
+      "cor": "Red"
+    },
+    "criado_em": "2021-08-07",
+    "promocoes": []
+  },
+  {
+    "id_produto": 137,
+    "nome": "Yamaha Bass 3X Electric Bass",
+    "id_categoria": 2,
+    "categoria": "Baixos",
+    "preco_tabela": 11445.0,
+    "estoque": 11,
+    "status": "active",
+    "descricao": "Contrabaixo ativo de 5 cordas Ibanez com equalizador de 3 bandas. Braço rápido e confortável para linhas de baixo modernas e slap.",
+    "especificacoes": {
+      "corpo": "Ash",
+      "braço": "Maple",
+      "cordas": "4",
+      "cor": "Black"
+    },
+    "criado_em": "2023-07-30",
+    "promocoes": []
+  },
+  {
+    "id_produto": 138,
+    "nome": "Music Man Bass 4X Electric Bass",
+    "id_categoria": 2,
+    "categoria": "Baixos",
+    "preco_tabela": 7157.0,
+    "estoque": 9,
+    "status": "active",
+    "descricao": "Contrabaixo elétrico Music Man StingRay com captador humbucker na ponte. Ataque agressivo e definição impecável para rock e metal.",
+    "especificacoes": {
+      "corpo": "Ash",
+      "braço": "Maple",
+      "cordas": "4",
+      "cor": "Black"
+    },
+    "criado_em": "2020-10-15",
+    "promocoes": []
+  },
+  {
+    "id_produto": 139,
+    "nome": "Bateria Acústica Yamaha Kit 1 Studio",
+    "id_categoria": 3,
+    "categoria": "Baterias e Percussão",
+    "preco_tabela": 4439.0,
+    "estoque": 8,
+    "status": "active",
+    "descricao": "Bateria acústica Pearl Export com cascos em Poplar e mogno asiático. Sonoridade encorpada e ferragens reforçadas para o dia a dia.",
+    "especificacoes": {
+      "cascos": "Maple",
+      "peças": "5",
+      "ferragens": "included",
+      "cor": "Blue"
+    },
+    "criado_em": "2024-01-10",
+    "promocoes": [
+      {
+        "id_promocao": 21,
+        "desconto_percentual": 35,
+        "campanha": "Liquidação de Inverno",
+        "ativa": false
+      }
+    ]
+  },
+  {
+    "id_produto": 140,
+    "nome": "Bateria Acústica Pearl Kit 2 Studio",
+    "id_categoria": 3,
+    "categoria": "Baterias e Percussão",
+    "preco_tabela": 13285.0,
+    "estoque": 7,
+    "status": "active",
+    "descricao": "Bateria acústica Tama com cascos 100% Birch e sistema de suspensão Star-Mount. Ataque explosivo e excelente projeção em palcos.",
+    "especificacoes": {
+      "cascos": "Maple",
+      "peças": "5",
+      "ferragens": "included",
+      "cor": "Black"
+    },
+    "criado_em": "2022-06-25",
+    "promocoes": [
+      {
+        "id_promocao": 20,
+        "desconto_percentual": 22,
+        "campanha": "Queima de Estoque",
+        "ativa": false
+      }
+    ]
+  },
+  {
+    "id_produto": 141,
+    "nome": "Bateria Acústica Yamaha Kit 3 Studio",
+    "id_categoria": 3,
+    "categoria": "Baterias e Percussão",
+    "preco_tabela": 14922.0,
+    "estoque": 8,
+    "status": "active",
+    "descricao": "Bateria acústica Yamaha Stage Custom com bumbos profundos e ferragens inclusas. O padrão de confiabilidade e som focado para shows e ensaios.",
+    "especificacoes": {
+      "cascos": "Maple",
+      "peças": "5",
+      "ferragens": "included",
+      "cor": "Wine Red"
+    },
+    "criado_em": "2021-04-18",
+    "promocoes": []
+  },
+  {
+    "id_produto": 142,
+    "nome": "Teclado Sintetizador Korg Synth 1 Pro",
+    "id_categoria": 4,
+    "categoria": "Teclados e Pianos",
+    "preco_tabela": 1127.0,
+    "estoque": 2,
+    "status": "active",
+    "descricao": "Sintetizador workstation Roland com 88 teclas pesadas e motor sonoro SuperNATURAL. Ideal para produções complexas e arranjos ao vivo.",
+    "especificacoes": {
+      "teclas": "61",
+      "tipo": "Synthesizer",
+      "polifonia": "128",
+      "cor": "Black"
+    },
+    "criado_em": "2023-03-05",
+    "promocoes": []
+  },
+  {
+    "id_produto": 143,
+    "nome": "Teclado Sintetizador Nord Synth 2 Pro",
+    "id_categoria": 4,
+    "categoria": "Teclados e Pianos",
+    "preco_tabela": 19567.0,
+    "estoque": 3,
+    "status": "active",
+    "descricao": "Piano de palco Nord Stage com seções independentes de piano, órgão e synth. Interface intuitiva e qualidade sonora padrão da indústria.",
+    "especificacoes": {
+      "teclas": "61",
+      "tipo": "Synthesizer",
+      "polifonia": "128",
+      "cor": "Black"
+    },
+    "criado_em": "2022-01-05",
+    "promocoes": []
+  },
+  {
+    "id_produto": 144,
+    "nome": "Teclado Sintetizador Roland Synth 3 Pro",
+    "id_categoria": 4,
+    "categoria": "Teclados e Pianos",
+    "preco_tabela": 9351.0,
+    "estoque": 8,
+    "status": "active",
+    "descricao": "Teclado arranjador Yamaha com 61 teclas sensitivas e acompanhamentos realistas. Ótima opção de custo-benefício para estudantes e apresentações solo.",
+    "especificacoes": {
+      "teclas": "61",
+      "tipo": "Synthesizer",
+      "polifonia": "128",
+      "cor": "Black"
+    },
+    "criado_em": "2020-04-22",
+    "promocoes": []
+  },
+  {
+    "id_produto": 145,
+    "nome": "Fender Stratocaster American Pro II",
+    "id_categoria": 1,
+    "categoria": "Guitarras",
+    "preco_tabela": 12500.0,
+    "estoque": 5,
+    "status": "active",
+    "descricao": "Guitarra elétrica Fender Stratocaster com 3 captadores V-Mod II single-coil. Clássico timbre brilhante e versátil para diversos estilos.",
+    "especificacoes": {
+      "corpo": "Alder",
+      "braço": "Maple",
+      "cordas": "6",
+      "cor": "Sunburst"
+    },
+    "criado_em": "2023-01-15",
+    "promocoes": []
+  }
+]

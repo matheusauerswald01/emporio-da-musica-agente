@@ -1,0 +1,47 @@
+[
+  {
+    "id_categoria": 1,
+    "categoria": "Guitarras",
+    "descricao": "Guitarras elétricas de todos os estilos, do rock ao jazz"
+  },
+  {
+    "id_categoria": 2,
+    "categoria": "Baixos",
+    "descricao": "Baixos elétricos e acústicos para todas as formações"
+  },
+  {
+    "id_categoria": 3,
+    "categoria": "Baterias e Percussão",
+    "descricao": "Baterias acústicas, eletrônicas e peças avulsas de percussão"
+  },
+  {
+    "id_categoria": 4,
+    "categoria": "Teclados e Pianos",
+    "descricao": "Pianos digitais, sintetizadores, arranjadores e controladores MIDI"
+  },
+  {
+    "id_categoria": 5,
+    "categoria": "Violões",
+    "descricao": "Violões clássicos, folk e eletroacústicos"
+  },
+  {
+    "id_categoria": 6,
+    "categoria": "Instrumentos de Sopro (Madeiras)",
+    "descricao": "Flautas, clarinetes, saxofones, oboés e outros instrumentos de sopro em madeira"
+  },
+  {
+    "id_categoria": 7,
+    "categoria": "Instrumentos de Sopro (Metais)",
+    "descricao": "Trompetes, trombones, tubas, trompas e outros metais"
+  },
+  {
+    "id_categoria": 8,
+    "categoria": "Cordas Orquestrais",
+    "descricao": "Violinos, violas, violoncelos e contrabaixos acústicos"
+  },
+  {
+    "id_categoria": 9,
+    "categoria": "Ukuleles",
+    "descricao": "Ukuleles soprano, concert, tenor e barítono"
+  }
+]
