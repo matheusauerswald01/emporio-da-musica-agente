@@ -1,0 +1,29 @@
+# Requer Python >= 3.12 (limite imposto pelo numpy 2.5). Testado com Python 3.14.6.
+# Versões fixadas para que o avaliador reproduza exatamente o ambiente testado.
+
+# Agente: grafo, memória (checkpointer) e ferramentas
+langgraph==1.2.19
+langchain-core==1.7.3
+
+# LLM do Gemini (via API key do Google AI Studio)
+langchain-google-genai==4.4.2
+
+# Embeddings do RAG: SDK oficial direto, porque o gemini-embedding-2 não aceita
+# o campo task_type que o wrapper do LangChain sempre envia
+google-genai==2.34.0
+
+# Dados: leitura dos CSVs e similaridade de embeddings no RAG
+pandas==3.1.0
+numpy==2.5.4
+
+# Manual de políticas em PDF
+pypdf==6.21.4
+
+# Interface de chat
+streamlit==1.66.1
+
+# Configuração por variáveis de ambiente (.env)
+python-dotenv==1.2.4
+
+# Testes
+pytest==9.2.0

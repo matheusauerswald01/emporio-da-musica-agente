@@ -1,0 +1,51 @@
+# ---------------------------------------------------------------
+# Segredos (LGPD + segurança): nunca versionar chaves de API
+# ---------------------------------------------------------------
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# ---------------------------------------------------------------
+# LGPD: históricos e logs de conversa podem conter dados pessoais
+# (nome, e-mail, telefone, número de pedido) informados pelo cliente
+# ---------------------------------------------------------------
+*.log
+logs/
+historico/
+conversas_locais/
+
+# ---------------------------------------------------------------
+# Material do processo seletivo (não é parte do projeto)
+# ---------------------------------------------------------------
+desafio_tecnico_ai_eng_artefact.pdf
+
+# ---------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Ambiente virtual
+.venv/
+venv/
+
+# Testes e cobertura
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Cache local de embeddings (regerado a partir do PDF)
+.cache/
+
+# ---------------------------------------------------------------
+# Editores e sistema operacional
+# ---------------------------------------------------------------
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
