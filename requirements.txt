@@ -12,7 +12,7 @@ langchain-google-genai==4.4.2
 # o campo task_type que o wrapper do LangChain sempre envia
 google-genai==2.34.0
 
-# Dados: leitura dos CSVs e similaridade de embeddings no RAG
+# Dados: tabelas da loja (data/json) e similaridade de embeddings no RAG
 pandas==3.1.0
 numpy==2.5.4
 

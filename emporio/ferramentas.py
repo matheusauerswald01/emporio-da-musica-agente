@@ -16,6 +16,7 @@ from emporio.busca import (
     casaram_tipo_de_instrumento,
     categorias_citadas,
     dentro_da_faixa,
+    do_mais_barato,
     mais_especificos,
     mais_proximos,
     nomes_parecidos,
@@ -86,13 +87,14 @@ def buscar_produtos(
         return _busca_sem_correspondencia(base, pontuados, termos, preco_minimo, preco_maximo)
 
     na_faixa = encontrados[dentro_da_faixa(encontrados["preco_final"], preco_minimo, preco_maximo)]
-    disponiveis = na_faixa[na_faixa["disponivel"]].sort_values("preco_final")
+    disponiveis = do_mais_barato(na_faixa[na_faixa["disponivel"]])
+    indisponiveis = do_mais_barato(na_faixa[~na_faixa["disponivel"]])
     resultado = {
         "total_disponiveis": len(disponiveis),
         "produtos": _resumos(disponiveis.head(LIMITE_RESULTADOS)),
         "indisponiveis": [
             {"nome": produto["nome"], "situacao": produto["situacao"]}
-            for produto in _linhas(na_faixa[~na_faixa["disponivel"]].head(LIMITE_OPCOES))
+            for produto in _linhas(indisponiveis.head(LIMITE_OPCOES))
         ],
     }
     if len(disponiveis) > LIMITE_RESULTADOS:
@@ -131,14 +133,14 @@ def detalhes_produto(nome: str) -> dict:
         return {
             "encontrado": False,
             "mensagem": f"{len(encontrados)} produtos correspondem a esse nome. Pergunte ao cliente qual deles.",
-            "opcoes": _resumos(encontrados.head(LIMITE_OPCOES)),
+            "opcoes": _resumos(do_mais_barato(encontrados).head(LIMITE_OPCOES)),
         }
     proximos = mais_proximos(pontuados)
     if not proximos.empty:
         return {
             "encontrado": False,
             "mensagem": "Nenhum produto tem exatamente esse nome. Estes são os mais próximos; confirme com o cliente.",
-            "opcoes": _resumos(proximos.head(LIMITE_OPCOES)),
+            "opcoes": _resumos(do_mais_barato(proximos).head(LIMITE_OPCOES)),
         }
     return {
         "encontrado": False,
@@ -177,7 +179,7 @@ def promocoes_ativas() -> dict:
     """
     produtos = obter_base().produtos
     em_promocao = produtos[produtos["desconto_percentual"].notna()].sort_values(
-        "desconto_percentual", ascending=False
+        ["desconto_percentual", "nome"], ascending=[False, True]
     )
     if em_promocao.empty:
         return {"promocoes": [], "mensagem": "Nenhuma promoção ativa no momento."}
@@ -313,11 +315,11 @@ def _detalhes_pedido(pedido: dict) -> dict:
     previsao = pedido["previsao_entrega"]
     return {
         "numero": int(pedido["id_pedido"]),
-        "primeiro_nome_cliente": pedido["nome_cliente"].split()[0],
+        "primeiro_nome_cliente": pedido["primeiro_nome"],
         "data_pedido": _data_br(pedido["data_pedido"]),
         "status": status,
         "descricao_status": descricao_status,
-        "itens": [dict(item) for item in pedido["itens"]] if isinstance(pedido["itens"], list) else [],
+        "itens": [dict(item) for item in pedido["itens"]],
         "total": _numero(pedido["total"]),
         "forma_pagamento": _forma_pagamento(pedido["forma_pagamento"]),
         "codigo_rastreio": _texto_ou_nada(pedido["codigo_rastreio"]),

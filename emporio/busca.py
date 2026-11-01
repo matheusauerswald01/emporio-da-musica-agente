@@ -109,6 +109,11 @@ def dentro_da_faixa(precos: pd.Series, preco_minimo: float | None, preco_maximo:
     return dentro
 
 
+def do_mais_barato(produtos: pd.DataFrame) -> pd.DataFrame:
+    """Do mais barato ao mais caro; no empate, por nome, para a ordem não depender do arquivo."""
+    return produtos.sort_values(["preco_final", "nome"])
+
+
 def ordenar_por_preco(
     produtos: pd.DataFrame, preco_minimo: float | None, preco_maximo: float | None
 ) -> pd.DataFrame:
@@ -118,7 +123,7 @@ def ordenar_por_preco(
     acima = (precos - preco_maximo).clip(lower=0) if preco_maximo is not None else 0
     return (
         produtos.assign(_distancia_da_faixa=abaixo + acima)
-        .sort_values(["_distancia_da_faixa", "preco_final"])
+        .sort_values(["_distancia_da_faixa", "preco_final", "nome"])
         .drop(columns="_distancia_da_faixa")
     )
 
@@ -138,7 +143,7 @@ def ordenar_por_semelhanca(candidatos: pd.DataFrame, referencia: pd.DataFrame) -
             _em_comum=candidatos["palavras_busca"].map(lambda palavras: len(palavras & palavras_da_referencia)),
             _distancia=(precos - preco_da_referencia).abs(),
         )
-        .sort_values(["_fora_da_faixa", "_em_comum", "_distancia"], ascending=[True, False, True])
+        .sort_values(["_fora_da_faixa", "_em_comum", "_distancia", "nome"], ascending=[True, False, True, True])
         .drop(columns=["_fora_da_faixa", "_em_comum", "_distancia"])
     )
 
@@ -154,4 +159,4 @@ def nomes_parecidos(produtos: pd.DataFrame, nome: str, limite: int) -> list[str]
 
     notas = produtos["nome"].map(semelhanca)
     parecidos = produtos.assign(nota=notas)[notas >= SEMELHANCA_MINIMA]
-    return parecidos.sort_values("nota", ascending=False)["nome"].head(limite).tolist()
+    return parecidos.sort_values(["nota", "nome"], ascending=[False, True])["nome"].head(limite).tolist()

@@ -1,7 +1,9 @@
-"""Carrega os CSVs da loja e prepara as tabelas que as ferramentas consultam.
+"""Carrega os documentos JSON da loja e prepara as tabelas que as ferramentas consultam.
 
-Tudo é lido uma única vez por processo (`obter_base`). As colunas são renomeadas
-para português, para o código usar um só idioma.
+Os JSON em data/json/ são gerados e validados a partir dos CSV originais por
+scripts/csv_para_json.py: cada produto já traz categoria, especificações e promoções, e cada
+pedido já traz os itens. Por isso aqui não há validação de tipos, só as regras de negócio.
+Tudo é lido uma única vez por processo (`obter_base`).
 """
 
 from __future__ import annotations
@@ -15,24 +17,21 @@ import pandas as pd
 
 from emporio.texto import normalizar_telefone, normalizar_texto, palavras_chave
 
-PASTA_DADOS = Path(__file__).resolve().parent.parent / "data"
-PREFIXO_ARQUIVO = "desafio_tecnico_ai_eng - "
+PASTA_DADOS = Path(__file__).resolve().parent.parent / "data" / "json"
 
-ROTULOS_ESPECIFICACOES = {
-    "top": "tampo",
-    "back_sides": "fundo e laterais",
-    "neck": "braço",
-    "body": "corpo",
-    "strings": "cordas",
-    "scale": "escala",
-    "electronics": "eletrônica",
-    "color": "cor",
-    "shells": "cascos",
-    "pieces": "peças",
-    "hardware": "ferragens",
-    "keys": "teclas",
-    "type": "tipo",
-    "polyphony": "polifonia",
+# Campos lidos de cada documento. Declarados para que um arquivo sem registros
+# (uma loja ainda sem pedidos, por exemplo) carregue como tabela vazia, e não quebre.
+CAMPOS = {
+    "categorias": ["id_categoria", "categoria", "descricao"],
+    "produtos": [
+        "id_produto", "nome", "id_categoria", "categoria", "preco_tabela", "estoque",
+        "status", "descricao", "especificacoes", "promocoes",
+    ],
+    "pedidos": [
+        "id_pedido", "id_cliente", "data_pedido", "status", "total", "forma_pagamento",
+        "codigo_rastreio", "previsao_entrega", "observacao", "itens",
+    ],
+    "clientes": ["id_cliente", "primeiro_nome", "email", "telefone"],
 }
 
 # Palavras de busca tiradas das especificações ("violão de aço" acha o Takamine GD20,
@@ -92,62 +91,41 @@ class BaseDeDados:
 
 @cache
 def obter_base() -> BaseDeDados:
-    """Base da loja carregada a partir de `data/`, lida só na primeira chamada."""
+    """Base da loja carregada a partir de `data/json/`, lida só na primeira chamada."""
     return carregar_base(PASTA_DADOS)
 
 
 def carregar_base(pasta: Path) -> BaseDeDados:
-    """Lê os CSVs da pasta e junta as tabelas relacionadas."""
-    categorias = _preparar_categorias(_ler_csv(pasta, "categories"))
-    produtos = _preparar_produtos(
-        _ler_csv(pasta, "products"), categorias, _ler_csv(pasta, "promotions")
-    )
-    pedidos = _preparar_pedidos(
-        _ler_csv(pasta, "orders"),
-        _ler_csv(pasta, "order_items"),
-        _ler_csv(pasta, "customers"),
-        produtos,
-    )
+    """Lê os documentos JSON da pasta e prepara as tabelas."""
+    categorias = _preparar_categorias(_ler_json(pasta, "categorias"))
+    produtos = _preparar_produtos(_ler_json(pasta, "produtos"))
+    pedidos = _preparar_pedidos(_ler_json(pasta, "pedidos"), _ler_json(pasta, "clientes"), produtos)
     vocabulario = frozenset().union(*produtos["palavras_busca"], *categorias["palavras"])
     return BaseDeDados(produtos=produtos, categorias=categorias, pedidos=pedidos, vocabulario=vocabulario)
 
 
-def _ler_csv(pasta: Path, tabela: str) -> pd.DataFrame:
-    return pd.read_csv(pasta / f"{PREFIXO_ARQUIVO}{tabela}.csv")
+def _ler_json(pasta: Path, entidade: str) -> pd.DataFrame:
+    with open(pasta / f"{entidade}.json", encoding="utf-8") as arquivo:
+        return pd.DataFrame(json.load(arquivo), columns=CAMPOS[entidade])
 
 
 def _preparar_categorias(categorias: pd.DataFrame) -> pd.DataFrame:
-    categorias = categorias.rename(
-        columns={"category_id": "id_categoria", "name": "categoria", "description": "descricao"}
-    )
     # A descrição entra para reconhecer instrumentos sem produto cadastrado ("saxofone", "violino").
     categorias["palavras"] = [
         frozenset(palavras_chave(f"{nome} {descricao}"))
-        for nome, descricao in zip(categorias["categoria"], categorias["descricao"])
+        for nome, descricao in zip(categorias["categoria"], categorias["descricao"].fillna(""))
     ]
     return categorias
 
 
-def _preparar_produtos(
-    produtos: pd.DataFrame, categorias: pd.DataFrame, promocoes: pd.DataFrame
-) -> pd.DataFrame:
-    produtos = produtos.rename(
-        columns={
-            "product_id": "id_produto",
-            "price_brl": "preco_tabela",
-            "name": "nome",
-            "category_id": "id_categoria",
-            "description": "descricao",
-            "stock_quantity": "estoque",
-        }
+def _preparar_produtos(produtos: pd.DataFrame) -> pd.DataFrame:
+    vigentes = produtos["promocoes"].map(_promocao_vigente)
+    produtos["desconto_percentual"] = pd.Series(
+        [promocao["desconto_percentual"] if promocao else None for promocao in vigentes],
+        index=produtos.index, dtype=float,
     )
-    produtos = produtos.merge(categorias[["id_categoria", "categoria"]], on="id_categoria", how="left")
-    produtos = produtos.merge(_promocoes_ativas(promocoes), on="id_produto", how="left")
-    # Uma célula vazia na planilha não pode derrubar todas as ferramentas.
-    produtos["categoria"] = produtos["categoria"].fillna("")
-    produtos["estoque"] = produtos["estoque"].fillna(0).astype(int)
+    produtos["campanha"] = [promocao["campanha"] if promocao else None for promocao in vigentes]
 
-    produtos["especificacoes"] = produtos["specs"].map(_ler_especificacoes)
     produtos["descricao"] = [
         _descricao_confiavel(nome, descricao)
         for nome, descricao in zip(produtos["nome"], produtos["descricao"])
@@ -167,29 +145,13 @@ def _preparar_produtos(
     ]
     # Palavras do tipo de instrumento ("violao", "bateria"), que pesam mais na busca que adjetivos.
     produtos["palavras_tipo"] = produtos["categoria"].map(lambda categoria: frozenset(palavras_chave(categoria)))
-    return produtos.drop(columns=["specs", "created_at"])
+    return produtos.drop(columns="promocoes")
 
 
-def _promocoes_ativas(promocoes: pd.DataFrame) -> pd.DataFrame:
-    """Uma promoção por produto: a de maior desconto, pois promoções não são cumulativas."""
-    ativas = promocoes[promocoes["is_active"] == 1].rename(
-        columns={
-            "product_id": "id_produto",
-            "discount_percent": "desconto_percentual",
-            "description": "campanha",
-        }
-    )
-    maior_desconto = ativas.sort_values("desconto_percentual", ascending=False)
-    return maior_desconto.drop_duplicates("id_produto")[["id_produto", "desconto_percentual", "campanha"]]
-
-
-def _ler_especificacoes(texto: object) -> dict[str, str]:
-    """Converte o JSON da coluna specs em dicionário com rótulos em português."""
-    try:
-        especificacoes = json.loads(texto)
-    except (TypeError, json.JSONDecodeError):
-        return {}
-    return {ROTULOS_ESPECIFICACOES.get(chave, chave): str(valor) for chave, valor in especificacoes.items()}
+def _promocao_vigente(promocoes: list[dict]) -> dict | None:
+    """A promoção ativa de maior desconto, pois promoções não são cumulativas."""
+    ativas = [promocao for promocao in promocoes if promocao["ativa"]]
+    return max(ativas, key=lambda promocao: promocao["desconto_percentual"], default=None)
 
 
 def _descricao_confiavel(nome: str, descricao: object) -> str | None:
@@ -236,52 +198,31 @@ def _situacao(status: str, estoque: int) -> str:
     return SITUACAO_DISPONIVEL if estoque > 0 else SITUACAO_SEM_ESTOQUE
 
 
-def _preparar_pedidos(
-    pedidos: pd.DataFrame, itens: pd.DataFrame, clientes: pd.DataFrame, produtos: pd.DataFrame
-) -> pd.DataFrame:
-    pedidos = pedidos.rename(
-        columns={
-            "order_id": "id_pedido",
-            "customer_id": "id_cliente",
-            "order_date": "data_pedido",
-            "total_brl": "total",
-            "payment_method": "forma_pagamento",
-            "tracking_code": "codigo_rastreio",
-            "estimated_delivery": "previsao_entrega",
-            "notes": "observacao",
-        }
-    )
+def _preparar_pedidos(pedidos: pd.DataFrame, clientes: pd.DataFrame, produtos: pd.DataFrame) -> pd.DataFrame:
     for coluna in ("data_pedido", "previsao_entrega"):
         pedidos[coluna] = pd.to_datetime(pedidos[coluna], errors="coerce")
 
-    pedidos = pedidos.merge(_itens_por_pedido(itens, produtos), on="id_pedido", how="left")
+    nomes_produtos = dict(zip(produtos["id_produto"], produtos["nome"]))
+    pedidos["itens"] = pedidos["itens"].map(lambda itens: _itens_com_nome(itens, nomes_produtos))
     return pedidos.merge(_contatos_clientes(clientes), on="id_cliente", how="left")
 
 
-def _itens_por_pedido(itens: pd.DataFrame, produtos: pd.DataFrame) -> pd.DataFrame:
-    """Lista de itens ({produto, quantidade}) de cada pedido."""
-    itens = itens.rename(
-        columns={"order_id": "id_pedido", "product_id": "id_produto", "quantity": "quantidade"}
-    ).merge(produtos[["id_produto", "nome"]], on="id_produto", how="left")
-    itens["item"] = [
-        {"produto": nome, "quantidade": int(quantidade)}
-        for nome, quantidade in zip(itens["nome"], itens["quantidade"])
-    ]
-    return itens.groupby("id_pedido")["item"].agg(list).rename("itens").reset_index()
+def _itens_com_nome(itens: list[dict], nomes_produtos: dict[int, str]) -> list[dict]:
+    """Itens do pedido como o cliente os reconhece: nome do produto e quantidade."""
+    return [{"produto": nomes_produtos[item["id_produto"]], "quantidade": item["quantidade"]} for item in itens]
 
 
 def _contatos_clientes(clientes: pd.DataFrame) -> pd.DataFrame:
-    """Nome e contatos do cliente, normalizados para conferir quem pergunta pelo pedido (LGPD)."""
-    clientes = clientes.rename(columns={"customer_id": "id_cliente", "name": "nome_cliente"})
+    """Primeiro nome e contatos do cliente, normalizados para conferir quem pergunta pelo pedido (LGPD)."""
     clientes["email_cliente"] = _so_os_unicos(clientes["email"].str.strip().str.lower())
-    clientes["telefone_cliente"] = _so_os_unicos(clientes["phone"].map(normalizar_telefone, na_action="ignore"))
-    return clientes[["id_cliente", "nome_cliente", "email_cliente", "telefone_cliente"]]
+    clientes["telefone_cliente"] = _so_os_unicos(clientes["telefone"].map(normalizar_telefone, na_action="ignore"))
+    return clientes[["id_cliente", "primeiro_nome", "email_cliente", "telefone_cliente"]]
 
 
 def _so_os_unicos(contatos: pd.Series) -> pd.Series:
     """Apaga o contato cadastrado para mais de um cliente: ele não prova quem é o dono do pedido.
 
-    Na planilha, bruno.martins@jmail.com é de dois clientes diferentes (ids 11 e 43).
+    No cadastro, bruno.martins@jmail.com é de dois clientes diferentes (ids 11 e 43).
     O dono ainda consegue se identificar pelo outro contato.
     """
     return contatos.mask(contatos.duplicated(keep=False))

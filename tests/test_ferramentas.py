@@ -1,4 +1,4 @@
-"""Testes das ferramentas com os CSVs reais da loja (sem chamar o LLM)."""
+"""Testes das ferramentas com os dados reais da loja (data/json), sem chamar o LLM."""
 
 import pytest
 
