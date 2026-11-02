@@ -19,11 +19,17 @@ numpy==2.5.4
 # Manual de políticas em PDF
 pypdf==6.21.4
 
-# Interface de chat
-streamlit==1.66.1
+# API HTTP que a interface de chat (web/, Vercel AI SDK) consome em stream
+fastapi==0.162.0
+uvicorn==0.54.0
+anyio==4.15.1
+
+# Fuso horário da loja (America/Campo_Grande): o Windows não traz a base IANA
+tzdata==2026.6
 
 # Configuração por variáveis de ambiente (.env)
 python-dotenv==1.2.4
 
-# Testes
+# Testes (o httpx é usado pelo cliente de teste do FastAPI)
 pytest==9.2.0
+httpx==0.28.1
