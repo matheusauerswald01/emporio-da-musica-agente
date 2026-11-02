@@ -1,0 +1,451 @@
+/* Paleta tirada do próprio instrumento e da cidade da loja:
+   jacarandá (madeira clássica do violão brasileiro), níquel dos trastes, bronze e aço das cordas,
+   madrepérola das marcações do braço e o ipê-amarelo de Campo Grande, usado só como destaque. */
+:root {
+  --jacaranda: #3b2318;
+  --jacaranda-escuro: #26150e;
+  --niquel: #eceeeb;
+  --traste: #a3aaaf;
+  --osso: #e8e1d3;
+  --bronze: #b98b57;
+  --aco: #c8cdd2;
+  --ipe: #e3a21a;
+  --madreperola: #246a65;
+  --tinta: #1f1a17;
+  --tinta-suave: #5c5853;
+  --papel: #ffffff;
+  --borda: #d3d8d4;
+  --borda-do-campo: #7d837f; /* 3,3:1 sobre o níquel: o campo de mensagem precisa se destacar */
+  --texto-claro: #f7f3ec;
+  --texto-claro-suave: #cfc6ba;
+
+  --raio: 18px;
+  --gutter: 16px;
+  --largura-da-coluna: 46rem;
+
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  background: var(--niquel);
+  color: var(--tinta);
+  font-family: var(--fonte-texto);
+  font-size: 1rem;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+/* Foco visível: contorno escuro para contraste, halo de ipê como marca. */
+:focus-visible {
+  outline: 2px solid var(--jacaranda);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px rgb(227 162 26 / 0.45);
+}
+
+.so-leitor-de-tela {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.coluna {
+  width: 100%;
+  max-width: calc(var(--largura-da-coluna) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Página: cabeçalho e campo de mensagem fixos, conversa rolando no meio. */
+.pagina {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100dvh;
+}
+
+/* ---------- Cabeçalho ---------- */
+
+.cabecalho {
+  background: var(--jacaranda);
+  color: var(--texto-claro);
+}
+
+.cabecalho__conteudo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gutter);
+  padding-block: 14px 12px;
+}
+
+.marca {
+  margin: 0;
+  font-family: var(--fonte-marca), Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.35rem, 1rem + 1.4vw, 1.75rem);
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+}
+
+.cabecalho__atendente {
+  margin: 4px 0 0;
+  color: var(--texto-claro-suave);
+  font-size: 0.875rem;
+}
+
+.botao-nova-conversa {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border: 1px solid rgb(247 243 236 / 0.35);
+  border-radius: 999px;
+  background: transparent;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.botao-nova-conversa:not(:disabled):hover {
+  border-color: var(--ipe);
+  color: var(--ipe);
+}
+
+.cabecalho :focus-visible {
+  outline-color: var(--ipe);
+  box-shadow: none;
+}
+
+/* ---------- Braço do violão (assinatura) ---------- */
+
+.braco {
+  position: relative;
+  height: 52px;
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(90deg, rgb(255 255 255 / 0.025) 0 2px, transparent 2px 7px),
+    var(--jacaranda-escuro);
+  border-left: 6px solid var(--osso); /* a pestana */
+}
+
+.braco__traste {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: linear-gradient(90deg, var(--traste), #e6e9eb 50%, var(--traste));
+}
+
+.braco__marcacao {
+  position: absolute;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #e9f2ef, #9cc7bf 45%, #6f8fa8 100%);
+}
+
+.braco__marcacao--dupla {
+  top: 28%;
+  box-shadow: 0 calc(52px * 0.44) 0 0 #8fb6b5;
+}
+
+.braco__corda {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-radius: 1px;
+  box-shadow: 0 1px 1px rgb(0 0 0 / 0.45);
+}
+
+.braco__corda--bronze {
+  background: repeating-linear-gradient(90deg, var(--bronze) 0 1px, #d8b68a 1px 2px);
+}
+
+.braco__corda--aco {
+  background: var(--aco);
+}
+
+/* Enquanto a Lia responde, as cordas vibram, cada uma no seu tempo. */
+.braco[data-tocando="true"] .braco__corda {
+  animation: vibrar var(--periodo) ease-in-out infinite alternate;
+  filter: blur(0.35px);
+}
+
+@keyframes vibrar {
+  from {
+    transform: translateY(-1.1px);
+  }
+  to {
+    transform: translateY(1.1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .braco[data-tocando="true"] .braco__corda {
+    animation: none;
+    filter: none;
+    background: var(--ipe);
+  }
+}
+
+/* ---------- Conversa ---------- */
+
+/* position: relative ancora os rótulos .so-leitor-de-tela aqui dentro; sem isso, eles aumentam a
+   altura da página inteira e o cabeçalho rola para fora da tela. */
+.conversa {
+  position: relative;
+  overflow-y: auto;
+  padding-block: 24px 8px;
+}
+
+.slogan {
+  margin: 8px 0 20px;
+  font-family: var(--fonte-marca), Georgia, serif;
+  font-size: clamp(1.75rem, 1.2rem + 2.6vw, 2.6rem);
+  line-height: 1.1;
+  color: var(--jacaranda);
+}
+
+.mensagens {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.balao {
+  max-width: min(85%, 36rem);
+  padding: 10px 16px;
+  overflow-wrap: anywhere;
+}
+
+/* Reset com :where (especificidade de uma classe só) e um único espaçamento entre blocos. */
+.balao :where(p, ul, ol) {
+  margin: 0;
+}
+
+.balao :where(ul, ol) {
+  padding-left: 1.25rem;
+}
+
+.balao > * + * {
+  margin-top: 8px;
+}
+
+.balao > .so-leitor-de-tela + * {
+  margin-top: 0;
+}
+
+.balao li + li {
+  margin-top: 2px;
+}
+
+.balao--lia {
+  align-self: flex-start;
+  background: var(--papel);
+  border: 1px solid var(--borda);
+  border-radius: 4px var(--raio) var(--raio) var(--raio);
+}
+
+.balao--cliente {
+  align-self: flex-end;
+  background: var(--jacaranda);
+  color: var(--texto-claro);
+  border-radius: var(--raio) 4px var(--raio) var(--raio);
+  white-space: pre-wrap;
+}
+
+.balao strong {
+  font-weight: 700;
+}
+
+.consultando {
+  margin: 12px 0 0;
+  color: var(--madreperola);
+  font-size: 0.9375rem;
+  font-style: italic;
+}
+
+.consultando:empty {
+  margin: 0;
+}
+
+/* ---------- Sugestões ---------- */
+
+.sugestoes {
+  margin-top: 20px;
+}
+
+.sugestoes__titulo {
+  margin: 0 0 8px;
+  color: var(--tinta-suave);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sugestoes__lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sugestao {
+  padding: 8px 14px;
+  border: 1px solid var(--borda);
+  border-radius: 999px;
+  background: var(--papel);
+  font-size: 0.9375rem;
+  text-align: left;
+}
+
+.sugestao:hover {
+  border-color: var(--jacaranda);
+}
+
+/* ---------- Erro ---------- */
+
+.erro {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin-top: 12px;
+  padding: 12px 16px;
+  border-left: 4px solid var(--ipe);
+  border-radius: 4px;
+  background: var(--papel);
+}
+
+.erro p {
+  flex: 1 1 18rem;
+  margin: 0;
+}
+
+.erro__botao {
+  padding: 6px 14px;
+  border: 1px solid var(--jacaranda);
+  border-radius: 999px;
+  background: transparent;
+  font-weight: 600;
+}
+
+/* ---------- Campo de mensagem ---------- */
+
+.compositor {
+  padding-block: 10px 12px;
+  border-top: 1px solid var(--borda);
+  background: var(--niquel);
+}
+
+.compositor__formulario {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.compositor__campo {
+  flex: 1;
+  min-height: 46px;
+  max-height: 10rem;
+  padding: 11px 16px;
+  border: 1px solid var(--borda-do-campo);
+  border-radius: 23px;
+  background: var(--papel);
+  resize: none;
+  field-sizing: content;
+}
+
+/* O campo ganha foco a cada clique: contorno mais leve que o dos botões. */
+.compositor__campo:focus-visible {
+  outline-offset: 0;
+  box-shadow: 0 0 0 4px rgb(227 162 26 / 0.3);
+}
+
+.compositor__campo::placeholder {
+  color: var(--tinta-suave);
+}
+
+.compositor__botao {
+  flex-shrink: 0;
+  min-width: 84px;
+  height: 46px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 23px;
+  background: var(--jacaranda);
+  color: var(--texto-claro);
+  font-weight: 700;
+}
+
+.compositor__botao:not(:disabled):hover {
+  background: var(--jacaranda-escuro);
+}
+
+.aviso-de-privacidade {
+  margin-block: 8px 0;
+  color: var(--tinta-suave);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 480px) {
+  .marca {
+    font-size: 1.25rem;
+  }
+
+  .botao-nova-conversa {
+    padding: 6px 12px;
+    font-size: 0.8125rem;
+  }
+
+  .braco {
+    height: 40px;
+  }
+
+  .braco__marcacao--dupla {
+    box-shadow: 0 calc(40px * 0.44) 0 0 #8fb6b5;
+  }
+
+  .balao {
+    max-width: 92%;
+  }
+}
