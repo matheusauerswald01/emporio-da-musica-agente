@@ -2,11 +2,12 @@
 
 Rodar na raiz do projeto:  uvicorn api:app --port 8000
 
-POST   /api/chat       recebe a nova mensagem do cliente e devolve a resposta em stream.
-DELETE /api/chat/{id}  apaga da memória a conversa ("Nova conversa" e saída da página).
+POST /api/chat       recebe a nova mensagem do cliente e devolve a resposta em stream.
+GET  /api/chat/{id}  devolve o histórico da conversa, para a tela mostrar quando o cliente volta.
 
-A interface manda só a última mensagem e o id da conversa: o histórico fica na memória do
-LangGraph, no servidor, e não é reenviado pelo navegador a cada pergunta.
+A interface manda só a última mensagem e o id da conversa: o histórico fica no servidor, em
+conversas.db (SQLite), e não é reenviado pelo navegador a cada pergunta. A mensagem /apagar
+apaga o histórico da conversa (LGPD) e nunca chega ao modelo.
 """
 
 from __future__ import annotations
@@ -17,7 +18,7 @@ import logging
 import os
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from typing import Annotated, Literal
+from typing import Annotated, Any, Literal
 from uuid import UUID
 
 import anyio
@@ -25,17 +26,29 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.responses import StreamingResponse
 from langchain_core.messages import HumanMessage
+from langgraph.checkpoint.base import BaseCheckpointSaver
 from langgraph.graph.state import CompiledStateGraph
 from pydantic import BaseModel, Field, StringConstraints
 
 from emporio.agente import criar_agente
 from emporio.conversas import MemoriaDasConversas
+from emporio.memoria import abrir_memoria
 from emporio.persona import WHATSAPP
 from emporio.politicas import obter_indice
-from emporio.protocolo_ai_sdk import CABECALHOS_DO_STREAM, FIM_DO_STREAM, TradutorDeStream, evento_sse
+from emporio.protocolo_ai_sdk import (
+    CABECALHOS_DO_STREAM,
+    FIM_DO_STREAM,
+    TradutorDeStream,
+    evento_sse,
+    historico_para_a_interface,
+)
 
 TAMANHO_MAXIMO_DA_MENSAGEM = 2000
-INTERVALO_DA_LIMPEZA_EM_SEGUNDOS = 60
+INTERVALO_DA_LIMPEZA_EM_SEGUNDOS = 60 * 60
+COMANDO_APAGAR = "/apagar"
+MENSAGEM_HISTORICO_APAGADO = (
+    "Pronto! Apaguei todo o histórico desta conversa. Se precisar de algo, é só mandar uma nova mensagem."
+)
 MENSAGEM_DE_ERRO = (
     "Tive um problema para responder agora. Tente de novo em instantes ou fale com a gente "
     f"pelo WhatsApp {WHATSAPP}."
@@ -70,28 +83,38 @@ class PedidoDeResposta(BaseModel):
 
 
 def criar_app(agente: CompiledStateGraph | None = None) -> FastAPI:
-    """Cria a API. Sem agente, monta o de verdade (Gemini) ao subir; os testes passam um agente falso."""
+    """Cria a API. Sem agente, monta o de verdade (Gemini e conversas.db) ao subir; os testes passam um falso."""
 
     @asynccontextmanager
     async def ciclo_de_vida(app: FastAPI) -> AsyncIterator[None]:
-        app.state.conversas = MemoriaDasConversas(agente or _agente_de_producao())
-        limpeza = asyncio.create_task(_apagar_conversas_paradas(app.state.conversas))
-        yield
-        limpeza.cancel()
-        with contextlib.suppress(asyncio.CancelledError):
-            await limpeza
+        async with contextlib.AsyncExitStack() as recursos:
+            if agente is None:
+                memoria = await recursos.enter_async_context(abrir_memoria())
+                app.state.conversas = MemoriaDasConversas(_agente_de_producao(memoria))
+            else:
+                app.state.conversas = MemoriaDasConversas(agente)
+            limpeza = asyncio.create_task(_apagar_conversas_antigas(app.state.conversas))
+            yield
+            limpeza.cancel()
+            with contextlib.suppress(asyncio.CancelledError):
+                await limpeza
 
     app = FastAPI(title="Empório da Música: atendimento", lifespan=ciclo_de_vida)
 
     @app.post("/api/chat")
     async def responder(pedido: PedidoDeResposta, request: Request) -> StreamingResponse:
+        conversas = request.app.state.conversas
         texto = pedido.message.parts[0].text
-        eventos = _responder_em_stream(request.app.state.conversas, str(pedido.id), texto)
+        if texto.lower() == COMANDO_APAGAR:
+            eventos = _apagar_historico_em_stream(conversas, str(pedido.id))
+        else:
+            eventos = _responder_em_stream(conversas, str(pedido.id), texto)
         return StreamingResponse(eventos, media_type="text/event-stream", headers=CABECALHOS_DO_STREAM)
 
-    @app.delete("/api/chat/{id_da_conversa}", status_code=204)
-    async def apagar_conversa(id_da_conversa: UUID, request: Request) -> None:
-        await request.app.state.conversas.apagar(str(id_da_conversa))
+    @app.get("/api/chat/{id_da_conversa}")
+    async def historico(id_da_conversa: UUID, request: Request) -> dict[str, Any]:
+        mensagens = await request.app.state.conversas.mensagens(str(id_da_conversa))
+        return {"messages": historico_para_a_interface(mensagens)}
 
     return app
 
@@ -133,20 +156,30 @@ async def _responder_em_stream(conversas: MemoriaDasConversas, id_da_conversa: s
             await conversas.terminar_resposta(id_da_conversa, mensagens_antes, concluida)
 
 
-async def _apagar_conversas_paradas(conversas: MemoriaDasConversas) -> None:
+async def _apagar_historico_em_stream(conversas: MemoriaDasConversas, id_da_conversa: str) -> AsyncIterator[str]:
+    """Comando /apagar: apaga o histórico e confirma. A confirmação não fica gravada."""
+    await conversas.apagar(id_da_conversa)
+    tradutor = TradutorDeStream()
+    for parte in [*tradutor.inicio(), *tradutor.historico_apagado(MENSAGEM_HISTORICO_APAGADO), *tradutor.fim()]:
+        yield evento_sse(parte)
+    yield FIM_DO_STREAM
+
+
+async def _apagar_conversas_antigas(conversas: MemoriaDasConversas) -> None:
+    """Na subida e depois a cada intervalo, apaga as conversas que passaram do prazo de guarda."""
     while True:
+        await conversas.apagar_antigas()
         await asyncio.sleep(INTERVALO_DA_LIMPEZA_EM_SEGUNDOS)
-        await conversas.apagar_paradas()
 
 
-def _agente_de_producao() -> CompiledStateGraph:
+def _agente_de_producao(memoria: BaseCheckpointSaver) -> CompiledStateGraph:
     """Agente com o Gemini. Falha ao subir, e não na primeira pergunta, se faltar a chave."""
     load_dotenv()
     if not os.getenv("GOOGLE_API_KEY"):
         raise RuntimeError("Defina GOOGLE_API_KEY no arquivo .env (veja o .env.example).")
     # Monta o índice do manual já na subida, para a primeira pergunta sobre políticas não esperar.
     obter_indice()
-    return criar_agente()
+    return criar_agente(memoria=memoria)
 
 
 app = criar_app()

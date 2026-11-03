@@ -1,9 +1,9 @@
 """Agente de atendimento: grafo do LangGraph que junta o Gemini, as ferramentas, a persona e a memória.
 
 O grafo é o ciclo de agente com ferramentas: o atendente (LLM) responde ou pede ferramentas; os
-resultados voltam para ele até haver uma resposta. A memória é por conversa (thread_id) e fica só
-na RAM do processo: nada da conversa é gravado em disco (LGPD). Quando cada conversa sai da
-memória é decidido em emporio/conversas.py.
+resultados voltam para ele até haver uma resposta. A memória é por conversa (thread_id): a API a
+grava em SQLite (emporio/memoria.py), e emporio/conversas.py decide quando cada conversa sai dela.
+A memória guarda a conversa inteira, mas o modelo recebe só as últimas mensagens.
 """
 
 from __future__ import annotations
@@ -36,6 +36,10 @@ FERRAMENTAS = [
     for funcao in (buscar_produtos, detalhes_produto, promocoes_ativas, status_pedido, consultar_politicas)
 ]
 
+# Mensagens da conversa enviadas ao modelo a cada resposta: o bastante para o contexto da
+# conversa, sem deixar a chamada lenta nem passar do limite de tokens do Gemini.
+LIMITE_DE_MENSAGENS_NO_CONTEXTO = 20
+
 # Rodadas de ferramentas numa mesma resposta. Depois disso, o modelo é obrigado a responder em
 # texto: sem teto, um modelo insistente faria milhares de chamadas ao Gemini por mensagem.
 LIMITE_DE_CONSULTAS_POR_RESPOSTA = 6
@@ -63,7 +67,8 @@ def criar_agente(
         instrucoes = SystemMessage(instrucoes_do_atendente(agora_na_loja()))
         pode_consultar = _consultas_desde_a_pergunta(estado["messages"]) < LIMITE_DE_CONSULTAS_POR_RESPOSTA
         modelo_da_vez = atendente if pode_consultar else atendente_so_texto
-        return {"messages": [await modelo_da_vez.ainvoke([instrucoes, *estado["messages"]])]}
+        contexto = _janela_de_contexto(estado["messages"])
+        return {"messages": [await modelo_da_vez.ainvoke([instrucoes, *contexto])]}
 
     ferramentas = ToolNode(
         FERRAMENTAS,
@@ -83,6 +88,19 @@ def _tratar_erro_da_ferramenta(erro: Exception) -> str:
     if isinstance(erro, ToolInvocationError):
         return erro.message
     return MENSAGEM_FALHA_NA_FERRAMENTA
+
+
+def _janela_de_contexto(mensagens: list[AnyMessage]) -> list[AnyMessage]:
+    """As últimas mensagens da conversa, começando sempre numa pergunta do cliente.
+
+    Cortar no meio de um turno deixaria o resultado de uma ferramenta sem a chamada que o pediu, e
+    o Gemini recusa isso. Por isso o turno atual vai inteiro, mesmo que sozinho passe do limite.
+    """
+    perguntas = [indice for indice, mensagem in enumerate(mensagens) if isinstance(mensagem, HumanMessage)]
+    cabem = [indice for indice in perguntas if len(mensagens) - indice <= LIMITE_DE_MENSAGENS_NO_CONTEXTO]
+    if cabem:
+        return mensagens[cabem[0]:]
+    return mensagens[perguntas[-1]:] if perguntas else mensagens
 
 
 def _consultas_desde_a_pergunta(mensagens: list[AnyMessage]) -> int:

@@ -6,7 +6,12 @@ from datetime import datetime
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
 
 from emporio import politicas
-from emporio.agente import LIMITE_DE_CONSULTAS_POR_RESPOSTA, MENSAGEM_FALHA_NA_FERRAMENTA, criar_agente
+from emporio.agente import (
+    LIMITE_DE_CONSULTAS_POR_RESPOSTA,
+    LIMITE_DE_MENSAGENS_NO_CONTEXTO,
+    MENSAGEM_FALHA_NA_FERRAMENTA,
+    criar_agente,
+)
 from emporio.expediente import FUSO_DA_LOJA
 from emporio.ferramentas import MENSAGEM_PEDIDO_NAO_CONFERE
 from emporio.persona import EMAIL, WHATSAPP, instrucoes_do_atendente
@@ -123,6 +128,32 @@ def test_chamadas_em_paralelo_contam_para_o_limite():
     resultados = [mensagem.text for mensagem in mensagens if isinstance(mensagem, ToolMessage)]
     assert MENSAGEM_LIMITE_ATINGIDO not in " ".join(resultados[:LIMITE_DE_TENTATIVAS])
     assert MENSAGEM_LIMITE_ATINGIDO in resultados[-1]
+
+
+def test_modelo_recebe_so_as_ultimas_mensagens_comecando_numa_pergunta():
+    modelo = ModeloRoteirizado(roteiro=[])
+    agente = criar_agente(modelo)
+
+    for numero in range(LIMITE_DE_MENSAGENS_NO_CONTEXTO):
+        modelo.roteiro.append(AIMessage(f"Resposta {numero}"))
+        _conversar(agente, "longa", f"Pergunta {numero}")
+
+    contexto = modelo.recebidas[-1][1:]  # sem as instruções
+    assert len(contexto) <= LIMITE_DE_MENSAGENS_NO_CONTEXTO
+    assert isinstance(contexto[0], HumanMessage)
+    assert contexto[-1].text == f"Pergunta {LIMITE_DE_MENSAGENS_NO_CONTEXTO - 1}"
+
+
+def test_turno_atual_vai_inteiro_mesmo_maior_que_o_limite():
+    # Uma pergunta, uma resposta com muitas consultas e os resultados delas passam do limite.
+    chamadas = [chamada("promocoes_ativas", f"consulta-{numero}") for numero in range(LIMITE_DE_MENSAGENS_NO_CONTEXTO)]
+    modelo = ModeloRoteirizado(roteiro=[AIMessage("", tool_calls=chamadas), AIMessage("Pronto.")])
+
+    _conversar(criar_agente(modelo), "consultas", "Quais as promoções?")
+
+    contexto = modelo.recebidas[-1][1:]
+    assert len(contexto) == LIMITE_DE_MENSAGENS_NO_CONTEXTO + 2
+    assert contexto[0].text == "Quais as promoções?"
 
 
 def test_depois_de_muitas_consultas_o_modelo_tem_que_responder_em_texto():

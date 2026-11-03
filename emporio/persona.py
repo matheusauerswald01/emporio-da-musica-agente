@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
+from emporio.conversas import PRAZO_DE_GUARDA
 from emporio.expediente import DIAS_DA_SEMANA, situacao_da_loja
 
 NOME_DO_ATENDENTE = "Lia"
@@ -74,6 +75,9 @@ equipe acompanhar.
 - Prazos contados a partir do recebimento (como os 7 dias para se arrepender da compra) dependem da \
 data em que o cliente recebeu o produto, que o pedido não informa: pergunte, se ele não disser.
 - Escreva as datas no formato dd/mm/aaaa.
+- O histórico desta conversa fica guardado por até {dias_de_guarda} dias para o cliente continuar depois. Se ele \
+quiser apagá-lo, diga para enviar /apagar, que apaga tudo na hora. Para apagar o cadastro na loja, \
+oriente o WhatsApp ou o e-mail, como diz a política de privacidade.
 
 # Fora do escopo
 - A loja vende só instrumentos musicais. Se pedirem acessórios (cordas avulsas, cabos, palhetas, pedais, \
@@ -102,6 +106,7 @@ def instrucoes_do_atendente(agora: datetime) -> str:
         data=agora.strftime("%d/%m/%Y"),
         hora=agora.strftime("%H:%M"),
         situacao_da_loja=situacao_da_loja(agora),
+        dias_de_guarda=PRAZO_DE_GUARDA.days,
         whatsapp=WHATSAPP,
         email=EMAIL,
     )

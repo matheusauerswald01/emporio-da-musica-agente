@@ -10,7 +10,7 @@ import pytest
 from fastapi.testclient import TestClient
 from langchain_core.messages import AIMessage
 
-from api import MENSAGEM_DE_ERRO, MENSAGEM_OCUPADA, _responder_em_stream, criar_app
+from api import MENSAGEM_DE_ERRO, MENSAGEM_HISTORICO_APAGADO, MENSAGEM_OCUPADA, _responder_em_stream, criar_app
 from emporio import politicas
 from emporio.agente import criar_agente
 from emporio.conversas import MemoriaDasConversas
@@ -149,13 +149,36 @@ def test_chat_recusa_pedido_invalido(pedido):
         assert cliente.post("/api/chat", json=pedido).status_code == 422
 
 
-def test_nova_conversa_apaga_o_historico_da_memoria():
+def test_historico_volta_para_a_tela_sem_os_dados_das_ferramentas():
+    id_da_conversa = str(uuid4())
+    with _cliente(
+        AIMessage("Deixa eu ver.", tool_calls=[chamada("promocoes_ativas")]),
+        AIMessage("Temos 4 promoções ativas!"),
+    ) as cliente:
+        cliente.post("/api/chat", json=_pedido("Tem promoção?", id_da_conversa))
+        resposta = cliente.get(f"/api/chat/{id_da_conversa}")
+
+    assert resposta.status_code == 200
+    historico = resposta.json()["messages"]
+    assert [(mensagem["role"], [parte["text"] for parte in mensagem["parts"]]) for mensagem in historico] == [
+        ("user", ["Tem promoção?"]),
+        ("assistant", ["Deixa eu ver.", "Temos 4 promoções ativas!"]),
+    ]
+    assert "Ohana" not in resposta.text
+
+
+def test_comando_apagar_apaga_o_historico_sem_passar_pelo_modelo():
     id_da_conversa = str(uuid4())
     configuracao = {"configurable": {"thread_id": id_da_conversa}}
-    with _cliente(AIMessage("Oi! Sou a Lia.")) as cliente:
+    # O roteiro tem uma resposta só: se o /apagar chegasse ao modelo, faltaria resposta.
+    with _cliente(AIMessage("Oi, Bruno!")) as cliente:
         cliente.post("/api/chat", json=_pedido("Oi, sou o Bruno", id_da_conversa))
+        partes = _partes(cliente.post("/api/chat", json=_pedido("/Apagar ", id_da_conversa)))
         agente = cliente.app.state.conversas.agente
-        assert agente.get_state(configuracao).values["messages"]
+        historico = cliente.get(f"/api/chat/{id_da_conversa}").json()["messages"]
 
-        assert cliente.delete(f"/api/chat/{id_da_conversa}").status_code == 204
-        assert agente.get_state(configuracao).values == {}
+    assert _texto(partes) == MENSAGEM_HISTORICO_APAGADO
+    assert {"type": "data-historico-apagado", "data": {}, "transient": True} in partes
+    assert partes[-2:] == [{"type": "finish"}, "[DONE]"]
+    assert agente.get_state(configuracao).values == {}
+    assert historico == []

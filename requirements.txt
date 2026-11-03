@@ -4,6 +4,8 @@
 # Agente: grafo, memória (checkpointer) e ferramentas
 langgraph==1.2.19
 langchain-core==1.7.3
+# Histórico das conversas em SQLite (conversas.db)
+langgraph-checkpoint-sqlite==3.1.3
 
 # LLM do Gemini (via API key do Google AI Studio)
 langchain-google-genai==4.4.2

@@ -11,7 +11,7 @@ import json
 from typing import Any
 from uuid import uuid4
 
-from langchain_core.messages import AIMessage, AIMessageChunk, BaseMessage
+from langchain_core.messages import AIMessage, AIMessageChunk, BaseMessage, HumanMessage
 
 CABECALHOS_DO_STREAM = {
     # no-transform: impede que um proxy (o próprio Next.js, no repasse de /api) comprima o stream
@@ -73,9 +73,13 @@ class TradutorDeStream:
         self._respondeu = True  # A mensagem de erro já é a resposta.
         return [*self._fechar_texto(), {"type": "error", "errorText": texto}]
 
+    def historico_apagado(self, texto: str) -> list[dict[str, Any]]:
+        """Resposta ao comando /apagar: a confirmação e o aviso para a tela limpar a conversa."""
+        return [*self._escrever(texto), {"type": "data-historico-apagado", "data": {}, "transient": True}]
+
     def fim(self) -> list[dict[str, Any]]:
         partes = [] if self._respondeu else self._escrever(TEXTO_SEM_RESPOSTA)
-        partes += self._fechar_passo()
+        partes += [*self._fechar_texto(), *self._fechar_passo()]
         partes.append({"type": "finish"})
         return partes
 
@@ -108,6 +112,25 @@ class TradutorDeStream:
             return []
         self._passo = None
         return [*self._fechar_texto(), {"type": "finish-step"}]
+
+
+def historico_para_a_interface(mensagens: list[BaseMessage]) -> list[dict[str, Any]]:
+    """Histórico gravado no formato UIMessage do AI SDK, para a tela mostrar quando o cliente volta.
+
+    Vão só as perguntas do cliente e os textos da Lia; chamadas e resultados de ferramentas ficam
+    no servidor, como durante a resposta. Os textos da Lia num mesmo turno viram uma mensagem só.
+    """
+    interface: list[dict[str, Any]] = []
+    for mensagem in mensagens:
+        papel = "user" if isinstance(mensagem, HumanMessage) else "assistant"
+        if not isinstance(mensagem, (HumanMessage, AIMessage)) or not mensagem.text:
+            continue
+        parte = {"type": "text", "text": mensagem.text, "state": "done"}
+        if papel == "assistant" and interface and interface[-1]["role"] == "assistant":
+            interface[-1]["parts"].append(parte)
+        else:
+            interface.append({"id": mensagem.id, "role": papel, "parts": [parte]})
+    return interface
 
 
 def _ferramentas_chamadas(mensagem: AIMessage) -> list[str]:

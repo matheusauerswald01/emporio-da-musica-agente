@@ -37,6 +37,10 @@ const transporte = new DefaultChatTransport<MensagemDoChat>({
   prepareSendMessagesRequest: ({ id, messages }) => ({ body: { id, message: messages.at(-1) } }),
 });
 
+// O id da conversa fica guardado no navegador, para o cliente continuar de onde parou.
+const CHAVE_DO_ID_NO_NAVEGADOR = "emporio-da-musica:conversa";
+const FORMATO_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 // UUID v4 da conversa. O crypto.randomUUID só existe em contexto seguro (HTTPS ou localhost); aberta
 // pela rede local (no celular, por exemplo), a página monta o UUID com getRandomValues.
 function novoIdDeConversa(): string {
@@ -50,17 +54,29 @@ function novoIdDeConversa(): string {
   return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
 }
 
-function apagarConversa(id: string) {
-  // keepalive: o pedido segue mesmo com a página fechando.
-  void fetch(`/api/chat/${id}`, { method: "DELETE", keepalive: true });
+// Sem acesso ao armazenamento do navegador (bloqueado, ou na renderização do servidor), a conversa
+// vale só enquanto a página está aberta.
+function idDaConversaGuardado(): string {
+  try {
+    const guardado = localStorage.getItem(CHAVE_DO_ID_NO_NAVEGADOR);
+    if (guardado && FORMATO_UUID.test(guardado)) {
+      return guardado;
+    }
+    const novo = novoIdDeConversa();
+    localStorage.setItem(CHAVE_DO_ID_NO_NAVEGADOR, novo);
+    return novo;
+  } catch {
+    return novoIdDeConversa();
+  }
 }
 
 export function Chat() {
-  const [idDaConversa, setIdDaConversa] = useState(novoIdDeConversa);
+  const [idDaConversa] = useState(idDaConversaGuardado);
   const [rascunho, setRascunho] = useState("");
   const [consulta, setConsulta] = useState<string | null>(null);
   const conversa = useRef<HTMLElement>(null);
   const acompanhandoOFim = useRef(true);
+  const historicoApagado = useRef(false);
 
   const { messages, setMessages, sendMessage, status, error, stop, regenerate, clearError } = useChat<MensagemDoChat>({
     id: idDaConversa,
@@ -70,6 +86,16 @@ export function Chat() {
     onData: (parte) => {
       if (parte.type === "data-ferramenta") {
         setConsulta(CONSULTAS[parte.data.nome] ?? "Consultando");
+      }
+      if (parte.type === "data-historico-apagado") {
+        historicoApagado.current = true;
+      }
+    },
+    onFinish: ({ message }) => {
+      // Depois do /apagar, a tela também esquece a conversa: fica só a confirmação da Lia.
+      if (historicoApagado.current) {
+        historicoApagado.current = false;
+        setMessages([message]);
       }
     },
   });
@@ -86,16 +112,23 @@ export function Chat() {
     }
   }, [messages, status]);
 
-  // LGPD: ao sair da página, a conversa é apagada da memória do servidor.
+  // Ao abrir a página, mostra o histórico guardado no servidor (se o cliente ainda não começou a escrever).
   useEffect(() => {
-    const aoSair = (evento: PageTransitionEvent) => {
-      if (!evento.persisted) {
-        apagarConversa(idDaConversa);
-      }
+    let paginaAberta = true;
+    fetch(`/api/chat/${idDaConversa}`)
+      .then((resposta) => (resposta.ok ? (resposta.json() as Promise<{ messages: MensagemDoChat[] }>) : null))
+      .then((historico) => {
+        if (paginaAberta && historico?.messages.length) {
+          setMessages((atuais) => (atuais.length === 0 ? historico.messages : atuais));
+        }
+      })
+      .catch(() => {
+        // Sem histórico disponível, a conversa só começa do zero.
+      });
+    return () => {
+      paginaAberta = false;
     };
-    window.addEventListener("pagehide", aoSair);
-    return () => window.removeEventListener("pagehide", aoSair);
-  }, [idDaConversa]);
+  }, [idDaConversa, setMessages]);
 
   function aoRolar() {
     const area = conversa.current;
@@ -146,16 +179,6 @@ export function Chat() {
     setRascunho(pergunta.join("\n"));
   }
 
-  function novaConversa() {
-    // Para a resposta em andamento antes de pedir para apagar a conversa.
-    void stop();
-    apagarConversa(idDaConversa);
-    // Um id novo cria outro chat no useChat, vazio.
-    setIdDaConversa(novoIdDeConversa());
-    setConsulta(null);
-    setRascunho("");
-  }
-
   return (
     <div className="pagina">
       <header className="cabecalho">
@@ -164,9 +187,6 @@ export function Chat() {
             <h1 className="marca">Empório da Música</h1>
             <p className="cabecalho__atendente">Lia · atendente virtual</p>
           </div>
-          <button type="button" className="botao-nova-conversa" onClick={novaConversa} disabled={messages.length === 0}>
-            Nova conversa
-          </button>
         </div>
         <BracoDoViolao tocando={respondendo} />
       </header>
@@ -250,10 +270,11 @@ export function Chat() {
             </button>
           )}
         </form>
+        {/* O prazo é o PRAZO_DE_GUARDA de emporio/conversas.py. */}
         <p className="aviso-de-privacidade coluna">
-          Não envie CPF, dados de cartão nem senhas. As mensagens são processadas pelo Gemini, do Google. A conversa
-          fica só na memória do atendimento: é apagada quando você clica em Nova conversa ou fecha a página e, de
-          qualquer forma, 30 minutos depois da última mensagem.
+          Não envie CPF, dados de cartão nem senhas. As mensagens são processadas pelo Gemini, do Google. O
+          histórico fica guardado por até 30 dias para você continuar depois; para apagá-lo agora, envie{" "}
+          <strong>/apagar</strong>.
         </p>
       </footer>
     </div>

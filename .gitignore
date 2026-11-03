@@ -14,6 +14,9 @@
 logs/
 historico/
 conversas_locais/
+# Histórico das conversas em SQLite (e os arquivos -wal, -shm e -journal do banco)
+conversas.db
+conversas.db-*
 
 # ---------------------------------------------------------------
 # Material do processo seletivo (não é parte do projeto)

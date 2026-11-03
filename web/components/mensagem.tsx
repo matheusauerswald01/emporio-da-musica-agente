@@ -2,9 +2,12 @@ import type { UIMessage } from "ai";
 import { memo, type ReactNode } from "react";
 import Markdown from "react-markdown";
 
-// Mensagem do useChat. A API manda um aviso passageiro ("data-ferramenta") quando a Lia consulta
-// alguma coisa; ele não fica salvo na mensagem.
-export type MensagemDoChat = UIMessage<never, { ferramenta: { nome: string } }>;
+// Mensagem do useChat. A API manda avisos passageiros, que não ficam salvos na mensagem: o que a
+// Lia está consultando ("data-ferramenta") e a confirmação do /apagar ("data-historico-apagado").
+export type MensagemDoChat = UIMessage<
+  never,
+  { ferramenta: { nome: string }; "historico-apagado": Record<string, never> }
+>;
 
 type Autor = "lia" | "cliente";
 

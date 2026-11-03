@@ -125,26 +125,6 @@ button:disabled {
   font-size: 0.875rem;
 }
 
-.botao-nova-conversa {
-  flex-shrink: 0;
-  padding: 8px 14px;
-  border: 1px solid rgb(247 243 236 / 0.35);
-  border-radius: 999px;
-  background: transparent;
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-.botao-nova-conversa:not(:disabled):hover {
-  border-color: var(--ipe);
-  color: var(--ipe);
-}
-
-.cabecalho :focus-visible {
-  outline-color: var(--ipe);
-  box-shadow: none;
-}
-
 /* ---------- Braço do violão (assinatura) ---------- */
 
 .braco {
@@ -430,11 +410,6 @@ button:disabled {
 @media (max-width: 480px) {
   .marca {
     font-size: 1.25rem;
-  }
-
-  .botao-nova-conversa {
-    padding: 6px 12px;
-    font-size: 0.8125rem;
   }
 
   .braco {
