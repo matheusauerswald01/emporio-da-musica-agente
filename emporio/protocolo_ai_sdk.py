@@ -7,10 +7,14 @@ web/node_modules/ai/docs/04-ai-sdk-ui/50-stream-protocol.mdx.
 
 from __future__ import annotations
 
+import asyncio
+import contextlib
 import json
+from collections.abc import AsyncIterator
 from typing import Any
 from uuid import uuid4
 
+import anyio
 from langchain_core.messages import AIMessage, AIMessageChunk, BaseMessage, HumanMessage
 
 CABECALHOS_DO_STREAM = {
@@ -25,6 +29,12 @@ CABECALHOS_DO_STREAM = {
 }
 FIM_DO_STREAM = "data: [DONE]\n\n"
 
+# Comentário SSE (o useChat ignora) mandado quando o stream fica parado, por exemplo enquanto o
+# cliente do Gemini repete uma chamada que falhou. Sem ele, proxies derrubam a conexão parada:
+# o do Next.js, no repasse de /api, corta com 30 s; o nginx, com 60 s.
+SINAL_DE_VIDA = ": keep-alive\n\n"
+INTERVALO_DO_SINAL_DE_VIDA_EM_SEGUNDOS = 10
+
 # Resposta sem nenhum texto depois da última consulta (acontece, raramente, depois de uma ferramenta).
 TEXTO_SEM_RESPOSTA = "Desculpe, me perdi aqui. Pode repetir a pergunta?"
 
@@ -32,6 +42,34 @@ TEXTO_SEM_RESPOSTA = "Desculpe, me perdi aqui. Pode repetir a pergunta?"
 def evento_sse(parte: dict[str, Any]) -> str:
     """Uma parte do protocolo como evento SSE."""
     return f"data: {json.dumps(parte, ensure_ascii=False)}\n\n"
+
+
+async def com_sinal_de_vida(
+    eventos: AsyncIterator[str], intervalo: float = INTERVALO_DO_SINAL_DE_VIDA_EM_SEGUNDOS
+) -> AsyncIterator[str]:
+    """Repassa os eventos e, a cada `intervalo` segundos sem nenhum, manda o SINAL_DE_VIDA.
+
+    Se o cliente desconecta, a espera pelo próximo evento é cancelada, e o cancelamento chega à
+    resposta em andamento (que então se desfaz); este gerador espera ela terminar de se desfazer.
+    """
+    proximo = asyncio.ensure_future(anext(eventos))
+    try:
+        while True:
+            pronto, _ = await asyncio.wait({proximo}, timeout=intervalo)
+            if not pronto:
+                yield SINAL_DE_VIDA
+                continue
+            try:
+                evento = proximo.result()
+            except StopAsyncIteration:
+                return
+            yield evento
+            proximo = asyncio.ensure_future(anext(eventos))
+    finally:
+        if not proximo.done():
+            proximo.cancel()
+            with anyio.CancelScope(shield=True), contextlib.suppress(asyncio.CancelledError, StopAsyncIteration):
+                await proximo
 
 
 class TradutorDeStream:

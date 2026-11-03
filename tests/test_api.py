@@ -14,7 +14,7 @@ from api import MENSAGEM_DE_ERRO, MENSAGEM_HISTORICO_APAGADO, MENSAGEM_OCUPADA, 
 from emporio import politicas
 from emporio.agente import criar_agente
 from emporio.conversas import MemoriaDasConversas
-from emporio.protocolo_ai_sdk import TEXTO_SEM_RESPOSTA
+from emporio.protocolo_ai_sdk import SINAL_DE_VIDA, TEXTO_SEM_RESPOSTA, com_sinal_de_vida
 from tests.modelo_falso import ModeloRoteirizado, chamada
 
 
@@ -31,7 +31,8 @@ def _pedido(texto: str, id_da_conversa: str | None = None) -> dict:
 
 def _partes(resposta) -> list:
     """Partes do stream SSE, na ordem; o "[DONE]" final fica como texto."""
-    eventos = [linha.removeprefix("data: ") for linha in resposta.text.split("\n\n") if linha]
+    # Linhas que começam com ":" são comentários SSE (sinal de vida), que o useChat ignora.
+    eventos = [linha.removeprefix("data: ") for linha in resposta.text.split("\n\n") if linha and not linha.startswith(":")]
     return [evento if evento == "[DONE]" else json.loads(evento) for evento in eventos]
 
 
@@ -98,7 +99,8 @@ def test_parar_no_meio_da_ferramenta_logo_na_primeira_pergunta_desfaz_o_turno(mo
 
     async def cliente_clica_em_parar():
         async def receber():
-            async for _ in _responder_em_stream(conversas, "conversa", "Posso devolver?"):
+            # Como na API: a resposta passa pelo sinal de vida, que precisa repassar o cancelamento.
+            async for _ in com_sinal_de_vida(_responder_em_stream(conversas, "conversa", "Posso devolver?"), 0.1):
                 pass
 
         # O Starlette cancela o stream assim, por um cancel scope do anyio, quando o cliente desconecta.
@@ -112,6 +114,21 @@ def test_parar_no_meio_da_ferramenta_logo_na_primeira_pergunta_desfaz_o_turno(mo
 
     estado = conversas.agente.get_state({"configurable": {"thread_id": "conversa"}})
     assert estado.values["messages"] == []
+
+
+def test_stream_parado_recebe_sinal_de_vida_sem_perder_eventos():
+    async def resposta_lenta():
+        yield "data: primeiro\n\n"
+        await anyio.sleep(0.35)  # o Gemini repetindo uma chamada que falhou
+        yield "data: segundo\n\n"
+
+    async def receber():
+        return [evento async for evento in com_sinal_de_vida(resposta_lenta(), intervalo=0.1)]
+
+    eventos = anyio.run(receber)
+
+    assert [evento for evento in eventos if evento != SINAL_DE_VIDA] == ["data: primeiro\n\n", "data: segundo\n\n"]
+    assert eventos.count(SINAL_DE_VIDA) >= 2
 
 
 def test_conversa_responde_uma_mensagem_por_vez():

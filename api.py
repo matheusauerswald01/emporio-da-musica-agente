@@ -39,6 +39,7 @@ from emporio.protocolo_ai_sdk import (
     CABECALHOS_DO_STREAM,
     FIM_DO_STREAM,
     TradutorDeStream,
+    com_sinal_de_vida,
     evento_sse,
     historico_para_a_interface,
 )
@@ -108,7 +109,7 @@ def criar_app(agente: CompiledStateGraph | None = None) -> FastAPI:
         if texto.lower() == COMANDO_APAGAR:
             eventos = _apagar_historico_em_stream(conversas, str(pedido.id))
         else:
-            eventos = _responder_em_stream(conversas, str(pedido.id), texto)
+            eventos = com_sinal_de_vida(_responder_em_stream(conversas, str(pedido.id), texto))
         return StreamingResponse(eventos, media_type="text/event-stream", headers=CABECALHOS_DO_STREAM)
 
     @app.get("/api/chat/{id_da_conversa}")
