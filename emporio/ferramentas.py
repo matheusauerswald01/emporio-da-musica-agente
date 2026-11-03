@@ -8,7 +8,6 @@ por isso dizem quando usar cada uma.
 from __future__ import annotations
 
 import re
-from datetime import date
 
 import pandas as pd
 
@@ -26,6 +25,7 @@ from emporio.busca import (
     termos_sem_produto,
 )
 from emporio.dados import BaseDeDados, obter_base
+from emporio.expediente import agora_na_loja
 from emporio.texto import normalizar_telefone, palavras_chave
 
 LIMITE_RESULTADOS = 15
@@ -342,8 +342,10 @@ def _detalhes_pedido(pedido: dict) -> dict:
         "forma_pagamento": _forma_pagamento(pedido["forma_pagamento"]),
         "codigo_rastreio": _texto_ou_nada(pedido["codigo_rastreio"]),
         "previsao_entrega": _data_br(previsao),
+        # O dia de hoje vem do relógio da loja: o mesmo das instruções do atendente, no fuso de
+        # Campo Grande, e fixável para a avaliação (EMPORIO_AGORA).
         "entrega_atrasada": bool(
-            pedido["status"] == "shipped" and pd.notna(previsao) and previsao.date() < date.today()
+            pedido["status"] == "shipped" and pd.notna(previsao) and previsao.date() < agora_na_loja().date()
         ),
         "observacao": _texto_ou_nada(pedido["observacao"]),
     }

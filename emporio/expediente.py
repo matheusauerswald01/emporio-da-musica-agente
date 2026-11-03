@@ -9,10 +9,17 @@ Grande (26/08). Outros feriados municipais e pontos facultativos ficam de fora (
 
 from __future__ import annotations
 
+import os
+from collections.abc import Iterator
+from contextlib import contextmanager
 from datetime import date, datetime, time, timedelta
 from zoneinfo import ZoneInfo
 
 FUSO_DA_LOJA = ZoneInfo("America/Campo_Grande")
+# Data e hora fixas no lugar do relógio, no horário de Campo Grande (ex.: "2026-11-03T10:30"). A
+# resposta depende de a loja estar aberta, dos feriados e dos prazos: com o relógio fixo, a avaliação
+# e os exemplos dão sempre o mesmo resultado.
+VARIAVEL_DO_RELOGIO = "EMPORIO_AGORA"
 DIAS_DA_SEMANA = (
     "segunda-feira", "terça-feira", "quarta-feira", "quinta-feira", "sexta-feira", "sábado", "domingo",
 )
@@ -42,8 +49,36 @@ DIAS_PARA_PROCURAR_ABERTURA = 8
 
 
 def agora_na_loja() -> datetime:
-    """Data e hora atuais no fuso da loja."""
-    return datetime.now(FUSO_DA_LOJA)
+    """Data e hora atuais no fuso da loja, ou as fixadas em EMPORIO_AGORA.
+
+    A variável é lida a cada chamada, e não na importação: o agente e as ferramentas importam esta
+    função pelo nome, e assim também passam a ver o relógio fixado.
+    """
+    fixado = os.getenv(VARIAVEL_DO_RELOGIO)
+    if not fixado:
+        return datetime.now(FUSO_DA_LOJA)
+    try:
+        momento = datetime.fromisoformat(fixado)
+    except ValueError:
+        raise ValueError(
+            f"{VARIAVEL_DO_RELOGIO} precisa estar no formato 2026-11-03T10:30, e veio {fixado!r}."
+        ) from None
+    return momento.replace(tzinfo=FUSO_DA_LOJA) if momento.tzinfo is None else momento.astimezone(FUSO_DA_LOJA)
+
+
+@contextmanager
+def relogio_fixado(agora: str) -> Iterator[None]:
+    """Fixa o relógio da loja (EMPORIO_AGORA) dentro do bloco e devolve o valor anterior ao sair."""
+    anterior = os.environ.get(VARIAVEL_DO_RELOGIO)
+    os.environ[VARIAVEL_DO_RELOGIO] = agora
+    try:
+        agora_na_loja()  # formato errado falha aqui, e não no meio da conversa
+        yield
+    finally:
+        if anterior is None:
+            os.environ.pop(VARIAVEL_DO_RELOGIO, None)
+        else:
+            os.environ[VARIAVEL_DO_RELOGIO] = anterior
 
 
 def situacao_da_loja(agora: datetime) -> str:

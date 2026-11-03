@@ -2,6 +2,7 @@
 
 import pytest
 
+from emporio.expediente import VARIAVEL_DO_RELOGIO
 from emporio.ferramentas import buscar_produtos, detalhes_produto, promocoes_ativas, status_pedido
 
 
@@ -71,6 +72,14 @@ def test_status_pedido_so_responde_ao_dono_do_pedido():
     # o dono ainda entra pelo telefone.
     assert status_pedido(10, "bruno.martins@jmail.com")["verificado"] is False
     assert status_pedido(10, "(67) 98543-2109")["verificado"] is True
+
+
+@pytest.mark.parametrize(("agora", "atrasada"), [("2026-02-28T17:59", False), ("2026-03-01T08:00", True)])
+def test_entrega_atrasada_segue_o_relogio_da_loja(monkeypatch, agora, atrasada):
+    # O pedido 8 foi enviado com previsão de entrega para 28/02/2026.
+    monkeypatch.setenv(VARIAVEL_DO_RELOGIO, agora)
+
+    assert status_pedido(8, "+55 67 99654-7821")["pedido"]["entrega_atrasada"] is atrasada
 
 
 def test_promocoes_ativas_mostram_preco_original_e_desconto():

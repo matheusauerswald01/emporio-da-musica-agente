@@ -91,7 +91,10 @@ def _em_pedacos(resposta: AIMessage) -> list[AIMessageChunk]:
         ]
         pedacos.append(AIMessageChunk(content="", tool_call_chunks=chamadas))
     # Resposta vazia ainda chega como um pedaço vazio, como no Gemini.
-    return pedacos or [AIMessageChunk(content="")]
+    pedacos = pedacos or [AIMessageChunk(content="")]
+    # Como no Gemini, só o último pedaço traz os metadados (o nome do modelo, por exemplo).
+    pedacos[-1].response_metadata = dict(resposta.response_metadata)
+    return pedacos
 
 
 def chamada(ferramenta: str, id_da_chamada: str = "chamada-1", **argumentos: Any) -> dict[str, Any]:
