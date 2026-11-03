@@ -11,6 +11,7 @@ from langchain_core.messages import AIMessage
 from avaliacao.avaliar import Avaliacao, Execucao, _ler_argumentos, avaliar, executar_caso, relatorio_em_markdown
 from avaliacao.casos import CASOS, Caso
 from avaliacao.conferencia import Exato, Preco, aparece, motivos_da_falha, sem_contatos_do_cliente
+from avaliacao.gerar_exemplos import Exemplo, exemplo_em_markdown
 from emporio.agente import FERRAMENTAS, criar_agente
 from emporio.expediente import FUSO_DA_LOJA, agora_na_loja
 from emporio.sessao import ChamadaDeFerramenta, ResultadoDoTurno
@@ -173,6 +174,24 @@ def test_repeticoes_mostram_a_porcentagem_de_acerto():
 
     assert "0 de 1 casos passaram (0%); acerto nas execuções: 1 de 2 (50%)" in relatorio
     assert "| ❌ 1/2 |" in relatorio and "erro: ModelAPIError" in relatorio
+
+
+def test_exemplo_mostra_a_consulta_mascarada_e_a_resposta_sem_edicao():
+    exemplo = Exemplo(
+        arquivo="x.md", titulo="Pedido", mostra="o pedido.", mensagens=("Cadê meu pedido 8?", EMAIL_DA_ANA)
+    )
+    consulta = ChamadaDeFerramenta("status_pedido", {"numero_pedido": 8, "email_ou_telefone": EMAIL_DA_ANA})
+    turnos = [
+        ResultadoDoTurno("Me passa o e-mail da compra?", [], "gemini-3.5-flash-lite"),
+        ResultadoDoTurno("Ana, seu pedido está atrasado.", [consulta], "gemini-3.1-flash-lite"),
+    ]
+
+    texto = exemplo_em_markdown(2, exemplo, turnos)
+
+    assert texto.startswith("# Exemplo 2: Pedido\n")
+    assert "às 10:30 (Campo Grande), com o gemini-3.5-flash-lite e o gemini-3.1-flash-lite." in texto
+    assert '> 🔧 Lia consultou: `status_pedido(numero_pedido=8, email_ou_telefone="***")`' in texto
+    assert "**Lia:** Ana, seu pedido está atrasado." in texto
 
 
 def test_caso_desconhecido_e_recusado():
