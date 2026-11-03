@@ -3,23 +3,27 @@
 import json
 import threading
 import time
-from collections.abc import Iterator
-from typing import Any
 from uuid import uuid4
 
 import anyio
 import pytest
 from fastapi.testclient import TestClient
 from langchain_core.exceptions import ModelAPIError
-from langchain_core.messages import AIMessage, AIMessageChunk
-from langchain_core.outputs import ChatGenerationChunk
+from langchain_core.messages import AIMessage
 
-from api import MENSAGEM_DE_ERRO, MENSAGEM_HISTORICO_APAGADO, MENSAGEM_OCUPADA, _responder_em_stream, criar_app
+from api import (
+    MENSAGEM_DE_ERRO,
+    MENSAGEM_FORA_DO_AR,
+    MENSAGEM_HISTORICO_APAGADO,
+    MENSAGEM_OCUPADA,
+    _responder_em_stream,
+    criar_app,
+)
 from emporio import politicas
 from emporio.agente import criar_agente
 from emporio.conversas import MemoriaDasConversas
-from emporio.protocolo_ai_sdk import SINAL_DE_VIDA, TEXTO_SEM_RESPOSTA, com_sinal_de_vida
-from tests.modelo_falso import ModeloRoteirizado, chamada
+from emporio.protocolo_ai_sdk import SINAL_DE_VIDA, TEXTO_SEM_RESPOSTA, TradutorDeStream, com_sinal_de_vida
+from tests.modelo_falso import ModeloQueCaiNoMeio, ModeloRoteirizado, chamada, chave_invalida, sem_cota
 
 
 def _cliente(*roteiro) -> TestClient:
@@ -81,7 +85,7 @@ def test_resposta_com_falha_vira_aviso_e_e_desfeita_sem_duplicar_a_pergunta():
         cliente.post("/api/chat", json=_pedido("Tem promoção?", id_da_conversa))
         mensagens = agente.get_state(configuracao).values["messages"]
 
-    assert {"type": "error", "errorText": MENSAGEM_DE_ERRO} in com_falha
+    _confere_aviso_de_erro(com_falha, MENSAGEM_DE_ERRO, pode_tentar_de_novo=True)
     assert com_falha[-2:] == [{"type": "finish"}, "[DONE]"]
     assert "cota esgotada" not in json.dumps(com_falha)
     assert [mensagem.text for mensagem in mensagens] == ["Tem promoção?", "Temos 4 promoções ativas!"]
@@ -138,34 +142,45 @@ def test_stream_parado_recebe_sinal_de_vida_sem_perder_eventos():
 def test_resposta_em_stream_vem_da_reserva_quando_o_modelo_principal_falha():
     principal = ModeloRoteirizado(roteiro=[ModelAPIError("503 UNAVAILABLE")])
     reserva = ModeloRoteirizado(roteiro=[AIMessage("Oi! Sou a Lia, do Empório da Música.")])
-    with TestClient(criar_app(criar_agente(principal, reserva=reserva))) as cliente:
+    with TestClient(criar_app(criar_agente(principal, reservas=[reserva]))) as cliente:
         partes = _partes(cliente.post("/api/chat", json=_pedido("Oi")))
 
     assert _texto(partes) == "Oi! Sou a Lia, do Empório da Música."
     assert not any(parte != "[DONE]" and parte["type"] == "error" for parte in partes)
 
 
-class ModeloQueCaiNoMeio(ModeloRoteirizado):
-    """Manda o começo da resposta e falha, como uma conexão com o Gemini que cai no meio do stream."""
+def test_sem_cota_em_todos_os_modelos_avisa_que_nao_adianta_tentar_de_novo():
+    id_da_conversa = str(uuid4())
+    principal = ModeloRoteirizado(roteiro=[sem_cota()])
+    reserva = ModeloRoteirizado(roteiro=[sem_cota()])
+    with TestClient(criar_app(criar_agente(principal, reservas=[reserva]))) as cliente:
+        partes = _partes(cliente.post("/api/chat", json=_pedido("Onde está o meu pedido?", id_da_conversa)))
+        historico = cliente.get(f"/api/chat/{id_da_conversa}").json()["messages"]
 
-    def _stream(self, messages: list, stop: Any = None, run_manager: Any = None, **kwargs: Any) -> Iterator:
-        pedaco = ChatGenerationChunk(message=AIMessageChunk(content="Temos duas "))
-        if run_manager:
-            run_manager.on_llm_new_token(pedaco.text, chunk=pedaco)
-        yield pedaco
-        raise ModelAPIError("503 UNAVAILABLE")
+    _confere_aviso_de_erro(partes, MENSAGEM_FORA_DO_AR, pode_tentar_de_novo=False)
+    assert historico == []
+
+
+def test_chave_recusada_avisa_que_nao_adianta_tentar_de_novo():
+    principal = ModeloRoteirizado(roteiro=[chave_invalida()])
+    reserva = ModeloRoteirizado(roteiro=[AIMessage("Oi!")])
+    with TestClient(criar_app(criar_agente(principal, reservas=[reserva]))) as cliente:
+        partes = _partes(cliente.post("/api/chat", json=_pedido("Oi")))
+
+    _confere_aviso_de_erro(partes, MENSAGEM_FORA_DO_AR, pode_tentar_de_novo=False)
+    assert reserva.recebidas == []
 
 
 def test_falha_no_meio_da_resposta_nao_passa_a_vez_para_a_reserva():
     id_da_conversa = str(uuid4())
     reserva = ModeloRoteirizado(roteiro=[AIMessage("Temos 4 promoções ativas!")])
-    with TestClient(criar_app(criar_agente(ModeloQueCaiNoMeio(roteiro=[]), reserva=reserva))) as cliente:
+    with TestClient(criar_app(criar_agente(ModeloQueCaiNoMeio(), reservas=[reserva]))) as cliente:
         partes = _partes(cliente.post("/api/chat", json=_pedido("Tem promoção?", id_da_conversa)))
         historico = cliente.get(f"/api/chat/{id_da_conversa}").json()["messages"]
 
     # O começo já estava na tela, e a reserva o repetiria: vale o aviso de erro, e o turno é desfeito.
     assert _texto(partes) == "Temos duas "
-    assert {"type": "error", "errorText": MENSAGEM_DE_ERRO} in partes
+    _confere_aviso_de_erro(partes, MENSAGEM_DE_ERRO, pode_tentar_de_novo=True)
     assert reserva.recebidas == []
     assert historico == []
 
@@ -176,8 +191,30 @@ def test_conversa_responde_uma_mensagem_por_vez():
         cliente.app.state.conversas.iniciar_resposta(id_da_conversa)  # uma resposta em andamento
         partes = _partes(cliente.post("/api/chat", json=_pedido("Oi de novo", id_da_conversa)))
 
-    assert {"type": "error", "errorText": MENSAGEM_OCUPADA} in partes
+    _confere_aviso_de_erro(partes, MENSAGEM_OCUPADA, pode_tentar_de_novo=True)
     assert partes[-1] == "[DONE]"
+
+
+def test_aviso_de_erro_vem_antes_do_erro_e_fecha_o_texto_aberto():
+    tradutor = TradutorDeStream()
+    tradutor.inicio()
+    escrito = tradutor.traduzir(AIMessage("Temos duas"), {"langgraph_step": 1})
+
+    partes = tradutor.erro("Falhou.", pode_tentar_de_novo=False)
+
+    # O AI SDK para de ler o stream no "error": o aviso que viesse depois nunca chegaria à tela.
+    assert partes == [
+        {"type": "text-end", "id": escrito[-1]["id"]},
+        {"type": "data-erro", "data": {"texto": "Falhou.", "podeTentarDeNovo": False}, "transient": True},
+        {"type": "error", "errorText": "Falhou."},
+    ]
+
+
+def _confere_aviso_de_erro(partes: list, texto: str, pode_tentar_de_novo: bool) -> None:
+    """O aviso para a tela vem logo antes do erro, com o mesmo texto."""
+    aviso = {"type": "data-erro", "data": {"texto": texto, "podeTentarDeNovo": pode_tentar_de_novo}, "transient": True}
+    indice = partes.index(aviso)
+    assert partes[indice : indice + 2] == [aviso, {"type": "error", "errorText": texto}]
 
 
 def test_resposta_final_vazia_recebe_o_texto_padrao():

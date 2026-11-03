@@ -74,6 +74,9 @@ export function Chat() {
   const [idDaConversa] = useState(idDaConversaGuardado);
   const [rascunho, setRascunho] = useState("");
   const [consulta, setConsulta] = useState<string | null>(null);
+  // Aviso da API antes de um erro, com o texto para o cliente e se vale tentar de novo: a API sabe o que
+  // aconteceu. O banner usa só o aviso, e não o texto do erro, que numa falha de rede vem do navegador.
+  const [avisoDeErro, setAvisoDeErro] = useState<{ texto: string; podeTentarDeNovo: boolean } | null>(null);
   const conversa = useRef<HTMLElement>(null);
   const acompanhandoOFim = useRef(true);
   const historicoApagado = useRef(false);
@@ -89,6 +92,9 @@ export function Chat() {
       }
       if (parte.type === "data-historico-apagado") {
         historicoApagado.current = true;
+      }
+      if (parte.type === "data-erro") {
+        setAvisoDeErro(parte.data);
       }
     },
     onFinish: ({ message }) => {
@@ -144,6 +150,7 @@ export function Chat() {
     }
     acompanhandoOFim.current = true;
     setConsulta(null);
+    setAvisoDeErro(null);
     setRascunho("");
     void sendMessage({ text: pergunta });
   }
@@ -163,6 +170,7 @@ export function Chat() {
 
   function tentarDeNovo() {
     clearError();
+    setAvisoDeErro(null);
     void regenerate();
   }
 
@@ -233,13 +241,16 @@ export function Chat() {
 
           {error && (
             <div className="erro" role="alert">
+              {/* Sem o aviso da API, a falha foi no caminho (rede, API fora do ar). */}
               <p>
-                A Lia não conseguiu responder agora. Tente de novo; se continuar, chame a gente no WhatsApp{" "}
-                {WHATSAPP}.
+                {avisoDeErro?.texto ??
+                  `A Lia não conseguiu responder agora. Tente de novo; se continuar, chame a gente no WhatsApp ${WHATSAPP}.`}
               </p>
-              <button type="button" className="erro__botao" onClick={tentarDeNovo}>
-                Tentar de novo
-              </button>
+              {(avisoDeErro?.podeTentarDeNovo ?? true) && (
+                <button type="button" className="erro__botao" onClick={tentarDeNovo}>
+                  Tentar de novo
+                </button>
+              )}
             </div>
           )}
         </div>

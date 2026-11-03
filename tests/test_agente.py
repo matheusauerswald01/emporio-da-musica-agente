@@ -5,7 +5,7 @@ from datetime import datetime
 
 import httpx
 import pytest
-from langchain_core.exceptions import ModelAPIError, ModelInvalidRequestError, ModelRateLimitError
+from langchain_core.exceptions import ModelAPIError, ModelAuthenticationError
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
 
 from emporio import politicas
@@ -16,6 +16,7 @@ from emporio.agente import (
     criar_agente,
 )
 from emporio.expediente import FUSO_DA_LOJA
+from emporio.modelos import ChaveDoGeminiRecusada
 from emporio.ferramentas import MENSAGEM_PEDIDO_NAO_CONFERE
 from emporio.persona import EMAIL, WHATSAPP, instrucoes_do_atendente
 from emporio.tentativas import LIMITE_DE_TENTATIVAS, MENSAGEM_LIMITE_ATINGIDO
@@ -173,17 +174,19 @@ def test_depois_de_muitas_consultas_o_modelo_tem_que_responder_em_texto():
 
 
 def test_reserva_responde_quando_o_modelo_principal_esta_indisponivel():
-    principal = ModeloRoteirizado(roteiro=[ModelAPIError("503 UNAVAILABLE"), ModelRateLimitError("429")])
+    principal = ModeloRoteirizado(roteiro=[ModelAPIError("503 UNAVAILABLE")])
     reserva = ModeloRoteirizado(roteiro=[
         AIMessage("", tool_calls=[chamada("promocoes_ativas")]),
         AIMessage("Temos 4 promoções ativas!"),
     ])
 
-    mensagens = _conversar(criar_agente(principal, reserva=reserva), "sobrecarga", "Tem promoção?")
+    mensagens = _conversar(criar_agente(principal, reservas=[reserva]), "sobrecarga", "Tem promoção?")
 
     assert mensagens[-1].text == "Temos 4 promoções ativas!"
     # A reserva recebe o mesmo pedido que o modelo principal: instruções e histórico.
-    assert reserva.recebidas == principal.recebidas
+    assert reserva.recebidas[0] == principal.recebidas[0]
+    # Depois da falha, o principal fica fora da cadeia: a resposta depois da consulta já vai direto à reserva.
+    assert len(principal.recebidas) == 1
 
 
 def test_reserva_tambem_tem_que_responder_em_texto_depois_de_muitas_consultas():
@@ -191,10 +194,10 @@ def test_reserva_tambem_tem_que_responder_em_texto_depois_de_muitas_consultas():
         AIMessage("", tool_calls=[chamada("promocoes_ativas", f"consulta-{numero}")])
         for numero in range(LIMITE_DE_CONSULTAS_POR_RESPOSTA)
     ]
-    principal = ModeloRoteirizado(roteiro=[ModelAPIError("503")] * (LIMITE_DE_CONSULTAS_POR_RESPOSTA + 1))
+    principal = ModeloRoteirizado(roteiro=[ModelAPIError("503")])
     reserva = ModeloRoteirizado(roteiro=[*consultas, AIMessage("Essas são as promoções.")])
 
-    _conversar(criar_agente(principal, reserva=reserva), "insistente", "Tem promoção?")
+    _conversar(criar_agente(principal, reservas=[reserva]), "insistente", "Tem promoção?")
 
     assert reserva.modos == ["ferramentas"] * LIMITE_DE_CONSULTAS_POR_RESPOSTA + ["so_texto"]
 
@@ -204,18 +207,18 @@ def test_reserva_responde_quando_a_conexao_com_o_principal_cai_e_a_troca_fica_no
     principal = ModeloRoteirizado(roteiro=[httpx.ReadTimeout("tempo esgotado")])
     reserva = ModeloRoteirizado(roteiro=[AIMessage("Oi! Em que posso ajudar?")])
 
-    mensagens = _conversar(criar_agente(principal, reserva=reserva), "sem-rede", "Oi")
+    mensagens = _conversar(criar_agente(principal, reservas=[reserva]), "sem-rede", "Oi")
 
     assert mensagens[-1].text == "Oi! Em que posso ajudar?"
     assert "ReadTimeout" in caplog.text and "tempo esgotado" not in caplog.text
 
 
-def test_erro_que_a_reserva_nao_resolve_nao_chega_a_ela():
-    principal = ModeloRoteirizado(roteiro=[ModelInvalidRequestError("400 INVALID_ARGUMENT")])
+def test_chave_errada_nao_passa_a_vez_para_a_reserva():
+    principal = ModeloRoteirizado(roteiro=[ModelAuthenticationError("401 UNAUTHENTICATED")])
     reserva = ModeloRoteirizado(roteiro=[AIMessage("Oi!")])
 
-    with pytest.raises(ModelInvalidRequestError):
-        _conversar(criar_agente(principal, reserva=reserva), "pedido-invalido", "Oi")
+    with pytest.raises(ChaveDoGeminiRecusada):
+        _conversar(criar_agente(principal, reservas=[reserva]), "chave-errada", "Oi")
 
     assert reserva.recebidas == []
 

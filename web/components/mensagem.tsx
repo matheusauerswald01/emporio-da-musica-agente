@@ -3,10 +3,15 @@ import { memo, type ReactNode } from "react";
 import Markdown from "react-markdown";
 
 // Mensagem do useChat. A API manda avisos passageiros, que não ficam salvos na mensagem: o que a
-// Lia está consultando ("data-ferramenta") e a confirmação do /apagar ("data-historico-apagado").
+// Lia está consultando ("data-ferramenta"), a confirmação do /apagar ("data-historico-apagado") e,
+// antes de um erro, o texto dele e se vale tentar de novo ("data-erro").
 export type MensagemDoChat = UIMessage<
   never,
-  { ferramenta: { nome: string }; "historico-apagado": Record<string, never> }
+  {
+    ferramenta: { nome: string };
+    "historico-apagado": Record<string, never>;
+    erro: { texto: string; podeTentarDeNovo: boolean };
+  }
 >;
 
 type Autor = "lia" | "cliente";

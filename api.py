@@ -33,6 +33,7 @@ from pydantic import BaseModel, Field, StringConstraints
 from emporio.agente import criar_agente
 from emporio.conversas import MemoriaDasConversas
 from emporio.memoria import abrir_memoria
+from emporio.modelos import ChaveDoGeminiRecusada, ModelosForaDoAr
 from emporio.persona import WHATSAPP
 from emporio.politicas import obter_indice
 from emporio.protocolo_ai_sdk import (
@@ -56,6 +57,10 @@ MENSAGEM_DE_ERRO = (
 )
 # Uma conversa responde a uma mensagem por vez (ex.: reenvio logo depois do botão Parar).
 MENSAGEM_OCUPADA = "Ainda estou terminando a resposta anterior. Tente de novo em instantes."
+# Todos os modelos do Gemini sem cota (ou a chave recusada): tentar de novo logo em seguida não adianta.
+MENSAGEM_FORA_DO_AR = (
+    f"Estou fora do ar no momento e não consigo responder agora. Fale com a gente pelo WhatsApp {WHATSAPP}."
+)
 
 # Os logs nunca levam o texto das mensagens: ele pode ter nome, e-mail ou telefone (LGPD).
 logger = logging.getLogger(__name__)
@@ -143,6 +148,10 @@ async def _responder_em_stream(conversas: MemoriaDasConversas, id_da_conversa: s
                 for parte in tradutor.traduzir(mensagem, metadados):
                     yield evento_sse(parte)
             concluida = True
+        except (ModelosForaDoAr, ChaveDoGeminiRecusada) as erro:
+            logger.error("Falha ao gerar a resposta: %s.", type(erro).__name__)
+            for parte in tradutor.erro(MENSAGEM_FORA_DO_AR, pode_tentar_de_novo=False):
+                yield evento_sse(parte)
         except Exception as erro:
             # Só o tipo do erro: a mensagem de exceção pode trazer argumentos com dados do cliente.
             logger.error("Falha ao gerar a resposta: %s", type(erro).__name__)

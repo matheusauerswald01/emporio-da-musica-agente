@@ -106,10 +106,21 @@ class TradutorDeStream:
             self._respondeu = False
         return partes
 
-    def erro(self, texto: str) -> list[dict[str, Any]]:
-        """Partes que avisam a interface de uma falha no meio da resposta."""
+    def erro(self, texto: str, pode_tentar_de_novo: bool = True) -> list[dict[str, Any]]:
+        """Partes que avisam a interface de uma falha no meio da resposta.
+
+        O aviso passageiro "data-erro" leva o texto para a tela e diz se vale oferecer "Tentar de novo";
+        sem ele, a tela entende que a falha foi no caminho (rede) e mostra um texto genérico. Ele vem
+        antes do "error" porque o AI SDK para de ler o stream no "error". O "error" continua: é ele que
+        põe o useChat em estado de erro.
+        """
         self._respondeu = True  # A mensagem de erro já é a resposta.
-        return [*self._fechar_texto(), {"type": "error", "errorText": texto}]
+        aviso = {
+            "type": "data-erro",
+            "data": {"texto": texto, "podeTentarDeNovo": pode_tentar_de_novo},
+            "transient": True,
+        }
+        return [*self._fechar_texto(), aviso, {"type": "error", "errorText": texto}]
 
     def historico_apagado(self, texto: str) -> list[dict[str, Any]]:
         """Resposta ao comando /apagar: a confirmação e o aviso para a tela limpar a conversa."""
