@@ -37,8 +37,9 @@ MASCARA = "***"
 # Argumentos que sempre levam um contato do cliente.
 ARGUMENTOS_PESSOAIS = frozenset({"email_ou_telefone"})
 # E-mail ou telefone (8 dígitos ou mais, com ou sem separadores) em qualquer outro argumento de
-# texto, para o caso de o modelo pôr o contato no lugar errado.
-PARECE_CONTATO = re.compile(r"\S+@\S+|(?:\d[\s().+-]*){8,}")
+# texto, para o caso de o modelo pôr o contato no lugar errado. O achado termina sempre num dígito
+# ou numa letra, sem levar a pontuação que vem depois.
+PARECE_CONTATO = re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+|\+?\(?\d(?:[\s().-]*\d){7,}")
 
 
 class ConversaOcupada(Exception):
