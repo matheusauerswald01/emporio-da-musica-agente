@@ -3,12 +3,16 @@
 import json
 import threading
 import time
+from collections.abc import Iterator
+from typing import Any
 from uuid import uuid4
 
 import anyio
 import pytest
 from fastapi.testclient import TestClient
-from langchain_core.messages import AIMessage
+from langchain_core.exceptions import ModelAPIError
+from langchain_core.messages import AIMessage, AIMessageChunk
+from langchain_core.outputs import ChatGenerationChunk
 
 from api import MENSAGEM_DE_ERRO, MENSAGEM_HISTORICO_APAGADO, MENSAGEM_OCUPADA, _responder_em_stream, criar_app
 from emporio import politicas
@@ -129,6 +133,41 @@ def test_stream_parado_recebe_sinal_de_vida_sem_perder_eventos():
 
     assert [evento for evento in eventos if evento != SINAL_DE_VIDA] == ["data: primeiro\n\n", "data: segundo\n\n"]
     assert eventos.count(SINAL_DE_VIDA) >= 2
+
+
+def test_resposta_em_stream_vem_da_reserva_quando_o_modelo_principal_falha():
+    principal = ModeloRoteirizado(roteiro=[ModelAPIError("503 UNAVAILABLE")])
+    reserva = ModeloRoteirizado(roteiro=[AIMessage("Oi! Sou a Lia, do Empório da Música.")])
+    with TestClient(criar_app(criar_agente(principal, reserva=reserva))) as cliente:
+        partes = _partes(cliente.post("/api/chat", json=_pedido("Oi")))
+
+    assert _texto(partes) == "Oi! Sou a Lia, do Empório da Música."
+    assert not any(parte != "[DONE]" and parte["type"] == "error" for parte in partes)
+
+
+class ModeloQueCaiNoMeio(ModeloRoteirizado):
+    """Manda o começo da resposta e falha, como uma conexão com o Gemini que cai no meio do stream."""
+
+    def _stream(self, messages: list, stop: Any = None, run_manager: Any = None, **kwargs: Any) -> Iterator:
+        pedaco = ChatGenerationChunk(message=AIMessageChunk(content="Temos duas "))
+        if run_manager:
+            run_manager.on_llm_new_token(pedaco.text, chunk=pedaco)
+        yield pedaco
+        raise ModelAPIError("503 UNAVAILABLE")
+
+
+def test_falha_no_meio_da_resposta_nao_passa_a_vez_para_a_reserva():
+    id_da_conversa = str(uuid4())
+    reserva = ModeloRoteirizado(roteiro=[AIMessage("Temos 4 promoções ativas!")])
+    with TestClient(criar_app(criar_agente(ModeloQueCaiNoMeio(roteiro=[]), reserva=reserva))) as cliente:
+        partes = _partes(cliente.post("/api/chat", json=_pedido("Tem promoção?", id_da_conversa)))
+        historico = cliente.get(f"/api/chat/{id_da_conversa}").json()["messages"]
+
+    # O começo já estava na tela, e a reserva o repetiria: vale o aviso de erro, e o turno é desfeito.
+    assert _texto(partes) == "Temos duas "
+    assert {"type": "error", "errorText": MENSAGEM_DE_ERRO} in partes
+    assert reserva.recebidas == []
+    assert historico == []
 
 
 def test_conversa_responde_uma_mensagem_por_vez():

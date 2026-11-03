@@ -3,6 +3,9 @@
 import asyncio
 from datetime import datetime
 
+import httpx
+import pytest
+from langchain_core.exceptions import ModelAPIError, ModelInvalidRequestError, ModelRateLimitError
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage, ToolMessage
 
 from emporio import politicas
@@ -167,6 +170,54 @@ def test_depois_de_muitas_consultas_o_modelo_tem_que_responder_em_texto():
 
     assert modelo.modos == ["ferramentas"] * LIMITE_DE_CONSULTAS_POR_RESPOSTA + ["so_texto"]
     assert mensagens[-1].text == "Essas são as promoções."
+
+
+def test_reserva_responde_quando_o_modelo_principal_esta_indisponivel():
+    principal = ModeloRoteirizado(roteiro=[ModelAPIError("503 UNAVAILABLE"), ModelRateLimitError("429")])
+    reserva = ModeloRoteirizado(roteiro=[
+        AIMessage("", tool_calls=[chamada("promocoes_ativas")]),
+        AIMessage("Temos 4 promoções ativas!"),
+    ])
+
+    mensagens = _conversar(criar_agente(principal, reserva=reserva), "sobrecarga", "Tem promoção?")
+
+    assert mensagens[-1].text == "Temos 4 promoções ativas!"
+    # A reserva recebe o mesmo pedido que o modelo principal: instruções e histórico.
+    assert reserva.recebidas == principal.recebidas
+
+
+def test_reserva_tambem_tem_que_responder_em_texto_depois_de_muitas_consultas():
+    consultas = [
+        AIMessage("", tool_calls=[chamada("promocoes_ativas", f"consulta-{numero}")])
+        for numero in range(LIMITE_DE_CONSULTAS_POR_RESPOSTA)
+    ]
+    principal = ModeloRoteirizado(roteiro=[ModelAPIError("503")] * (LIMITE_DE_CONSULTAS_POR_RESPOSTA + 1))
+    reserva = ModeloRoteirizado(roteiro=[*consultas, AIMessage("Essas são as promoções.")])
+
+    _conversar(criar_agente(principal, reserva=reserva), "insistente", "Tem promoção?")
+
+    assert reserva.modos == ["ferramentas"] * LIMITE_DE_CONSULTAS_POR_RESPOSTA + ["so_texto"]
+
+
+def test_reserva_responde_quando_a_conexao_com_o_principal_cai_e_a_troca_fica_no_log(caplog):
+    # Tempo esgotado e rede chegam como exceções do httpx, e não como erros do langchain.
+    principal = ModeloRoteirizado(roteiro=[httpx.ReadTimeout("tempo esgotado")])
+    reserva = ModeloRoteirizado(roteiro=[AIMessage("Oi! Em que posso ajudar?")])
+
+    mensagens = _conversar(criar_agente(principal, reserva=reserva), "sem-rede", "Oi")
+
+    assert mensagens[-1].text == "Oi! Em que posso ajudar?"
+    assert "ReadTimeout" in caplog.text and "tempo esgotado" not in caplog.text
+
+
+def test_erro_que_a_reserva_nao_resolve_nao_chega_a_ela():
+    principal = ModeloRoteirizado(roteiro=[ModelInvalidRequestError("400 INVALID_ARGUMENT")])
+    reserva = ModeloRoteirizado(roteiro=[AIMessage("Oi!")])
+
+    with pytest.raises(ModelInvalidRequestError):
+        _conversar(criar_agente(principal, reserva=reserva), "pedido-invalido", "Oi")
+
+    assert reserva.recebidas == []
 
 
 def test_falha_numa_ferramenta_vira_aviso_para_o_modelo(monkeypatch):
