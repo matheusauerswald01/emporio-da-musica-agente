@@ -52,6 +52,18 @@ STATUS_PEDIDO = {
 }
 FORMAS_PAGAMENTO = {"pix": "PIX", "debit": "Cartão de débito", "boleto": "Boleto bancário"}
 
+# Palavras que só aparecem em pedido de acessório. Ficam de fora as que também descrevem um
+# instrumento: "amplificador" ("violão com pré-amplificador", em 3 produtos), "pedal" ("bateria com
+# pedal duplo") e "case" ("violão com case"). Quem pede esses acessórios é recusado pela persona.
+ACESSORIOS = frozenset(palavras_chave("palheta cabo capa correia encordoamento"))
+
+MENSAGEM_ACESSORIOS = (
+    "A loja trabalha só com instrumentos musicais e não "
+    "vende acessórios (cordas, palhetas, cabos, cases, "
+    "pedais, amplificadores). Avise o cliente com "
+    "gentileza e ofereça ajuda com instrumentos."
+)
+
 
 def buscar_produtos(
     nome: str | None = None,
@@ -81,6 +93,12 @@ def buscar_produtos(
 
     base = obter_base()
     termos = frozenset(palavras_chave(" ".join(texto for texto in (nome, categoria) if texto)))
+    if termos & ACESSORIOS:
+        return {
+            "produtos": [],
+            "fora_do_escopo": True,
+            "mensagem": MENSAGEM_ACESSORIOS,
+        }
     pontuados = pontuar(base.produtos, termos, base.vocabulario)
     encontrados = pontuados[pontuados["completo"]]
     if encontrados.empty:

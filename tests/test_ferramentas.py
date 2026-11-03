@@ -82,3 +82,43 @@ def test_promocoes_ativas_mostram_preco_original_e_desconto():
     assert ohana["preco_tabela"] == 549
     assert ohana["promocao"]["desconto_percentual"] == 20
     assert ohana["promocao"]["preco_promocional"] == 439.2
+
+
+def _preco_final(produto: dict) -> float:
+    promocao = produto["promocao"]
+    if promocao:
+        return promocao["preco_promocional"]
+    return produto["preco_tabela"]
+
+
+def test_filtro_de_preco_usa_o_preco_com_promocao():
+    violoes = buscar_produtos(categoria="violão", preco_maximo=1000)
+
+    assert violoes["produtos"]
+    for produto in violoes["produtos"]:
+        assert _preco_final(produto) <= 1000
+
+    # Nenhum violão entra em "até R$ 1.000" só pela promoção. O Crafter HT-100 entra em "até R$ 2.000":
+    # custa R$ 2.399,00, mas sai por R$ 1.967,18 na promoção.
+    crafter = buscar_produtos(nome="Crafter", categoria="violão", preco_maximo=2000)["produtos"]
+    assert [produto["nome"] for produto in crafter] == ["Crafter HT-100 Folk Aço Natural"]
+    assert crafter[0]["preco_tabela"] > 2000 >= _preco_final(crafter[0])
+
+
+@pytest.mark.parametrize(("nome", "categoria"), [("palheta", None), ("cabo", "guitarra")])
+def test_busca_por_acessorio_e_recusada(nome, categoria):
+    resultado = buscar_produtos(nome=nome, categoria=categoria)
+
+    assert resultado["fora_do_escopo"] is True
+    assert resultado["produtos"] == []
+
+
+@pytest.mark.parametrize(
+    ("nome", "categoria"), [("pré-amplificador", "violão"), ("pedal duplo", "bateria"), ("case", "violão")]
+)
+def test_instrumento_descrito_com_palavra_de_acessorio_nao_e_recusado(nome, categoria):
+    resultado = buscar_produtos(nome=nome, categoria=categoria)
+
+    assert "fora_do_escopo" not in resultado
+    # Sem produto com tudo o que foi pedido, a busca sugere instrumentos da mesma categoria.
+    assert resultado["alternativas"]
